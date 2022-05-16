@@ -1,0 +1,3 @@
+- [BusHaltestellen](https://dds.rnv-online.de/resources/openData/haltestellen.json)
+- [Wetter in Städten der Welt](https://weatherdbi.herokuapp.com/data/weather/london)
+- [Random Personen (als Fahrgäste zu nehmen)](https://randomuser.me/api/-)

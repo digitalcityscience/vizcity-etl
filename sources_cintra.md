@@ -1,0 +1,6 @@
+- [Flughafen-API](https://portal.api.hamburg-airport.de/#ai4Mz)
+- [E-Ladestation: aktueller Status META](https://metaver.de/trefferanzeige?docuuid=86611577-BB2D-492B-8809-E6AC8D361F6B&plugid=/ingrid-group:ige-iplug-hmdk-metaver&docid=86611577-BB2D-492B-8809-E6AC8D361F6B)
+- [E-Ladestation: aktueller Status API](https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName%20eq%20%27HH_STA_E-Ladestationen%27&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1),Sensor,ObservedProperty))
+- [Parkhaus Belegung](https://geodienste.hamburg.de/HH_WMS_Luftmessnetz?SERVICE=WMS&REQUEST=GetCapabilities)
+- [Stadtrad-Stationen: Anzahl freier Fahrräder je Station](https://gdk.gdi-de.org/gdi-de/srv/eng/csw?REQUEST=GetRecords&SERVICE=CSW&VERSION=2.0.2&OUTPUTSCHEMA=http://www.isotc211.org/2005/gmd&constraintLanguage=CQL_TEXT&constraint=ResourceIdentifier=%27https://registry.gdi-de.org/id/de.hh/08d1158c-2b5b-49cb-91c3-0ca9fe22a955%27&constraint_language_version=1.1.0&typenames=csw:Record&resulttype=results&elementsetname=full#xpointer(//gmd:identificationInfo1/gmd:MD_DataIdentification))
+- [HVV-Daten (wenns funktioniert) 2.11 Methoden getVehicleMap und getTrackCoordinates Anzahl der Fahrzeuge innerhalb eines definierten Gebiets](https://gti.geofox.de/)

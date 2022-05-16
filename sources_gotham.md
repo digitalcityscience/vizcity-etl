@@ -1,0 +1,2 @@
+- [Standorte des Straßenwetterinformationssystems SWIS Hamburg](https://metaver.de/trefferanzeige?cmd=doShowDocument&docuuid=59248FD1-D9CF-42A0-ABDA-B0BC4DBD477F)
+- [StadtRAD-Stationen Hamburg -  Anzahl der Lastenräder und normalen Räder und Standorte](https://metaver.de/trefferanzeige?cmd=doShowDocument&docuuid=D18F375E-FA5F-4998-AFF8-557969F44479#detail_links)

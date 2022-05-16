@@ -1,0 +1,2 @@
+- [Bevölkerungsprognosen auf Ebene der Stadtteile Hamburgs | alle | ](https://metaver.de/trefferanzeige?docuuid=FE117C31-F018-4A90-88C4-73A770C02777)
+- [Wohnbauflächenpotenziale Hamburg | alle |](https://metaver.de/trefferanzeige?docuuid=8223B7BD-D194-4230-B436-1607D3BF3BC5)
