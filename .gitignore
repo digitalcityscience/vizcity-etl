@@ -131,3 +131,4 @@ tmp/
 inputs/
 .venv/
 __pycache__/
+.env
