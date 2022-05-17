@@ -1,1 +1,4 @@
 jmespath
+influxdb-client[ciso]
+python-dotenv
+requests
