@@ -10,3 +10,6 @@ install:
 
 test: test_*.py
 	python -m pytest -ra
+
+update-snapshot:
+	python -m pytest --snapshot-update

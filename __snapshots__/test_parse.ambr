@@ -1,0 +1,504 @@
+# name: test_extract_ev_charging_events
+  list([
+    dict({
+      'address': 'Am Born 6B, 22765 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Bei der Johanniskirche 16, 22767 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Hühnerposten 14, 20097 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Falkentaler Weg 4, 22587 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Großmoorring 11, 21079 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Gertigstraße 64, 22303 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Bornstraße 18, 20146 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Dithmarscher Straße 9, 22049 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Luruper Hauptstraße 138, 22547 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Dehnhaide 111, 22081 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Schinkelstraße 1, 22303 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Heinrich-Barth-Straße 18, 20146 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Düppelstraße 23, 22769 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Heegbarg 12, 22391 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Bartelsstraße 41, 20357 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Oelkersallee 1, 22769 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Löwenstraße 20, 20251 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Eppendorfer Weg 86, 20259 Hamburg',
+      'latitude': None,
+      'status': 'outoforder',
+    }),
+    dict({
+      'address': 'Grasweg 6, 22299 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Öjendorfer Damm 60, 22043 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Volksdorfer Damm 252, 22395 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Jütländer Allee 47, 22527 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Tondernstraße 24, 20564 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Hohenesch 50, 22765 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Mühlendamm 29, 22087 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Neumann-Reichard-Straße 22, 22041 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Rathausstraße 6, 20095 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Heilwigstraße 2, 20249 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Saseler Chaussee 109, 22393 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Finkenau 11, 22081 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Kantstraße 4, 22089 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Überseering 10, 22297 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Tibarg 24, 22459 Hamburg',
+      'latitude': None,
+      'status': 'outoforder',
+    }),
+    dict({
+      'address': 'Essener Bogen 1, 22419 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Esmarchstraße 51, 22767 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Brauerknechtgraben 55, 22459 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Stormarnplatz 1, 22393 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Rahlstedter Straße 154, 22143 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Nedderfeld 80, 22529 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Großer Schippsee 18, 21073 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Frankenstraße 35, 20097 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Veringstraße 173, 21107 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Holstenstraße 156, 20535 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Schubackstraße 4, 20251 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Alsterdorfer Straße 65, 22299 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Wallgraben 46, 21073 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Falckweg 3, 22605 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'E-Ladesäule',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Harvighorster Weg 2, 21031 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Norderstraße 141, 20097 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Barmbeker Straße 62, 22303 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Gilbertstraße 63, 22767 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Lohbrügger Landstraße 73A, 21031 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Bornheide 10, 22549 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Rahel-Varnhagen-Weg 38, 21035 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Roßberg 2, 22089 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Eißendorfer Straße 189, 21073 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Blankeneser Bahnhofstraße 4, 22587 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Rothenbaumchaussee 60, 20148 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Kurt-A.-Körber-Chaussee 35, 21033 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Papenhuderstr. 33, 22087 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Kümmellstraße 5, 20249 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Garstedter Weg 2, 25474 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Bogenstraße 13, 20144 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Krochmannstraße 53, 22297 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Von-der-Tann-Straße 9, 20259 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Beethovenstraße 68, 22083 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Schnackenburgallee 153, 22525 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Holstenplatz 14, 22765 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Heidrehmen 27, 22589 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Wandsbeker Königstraße 11, 22041 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Ekenknick 3, 22523 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Museumstraße 23, 22765 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Jacobsenweg 4, 22525 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Schleestraße 5, 22767 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Eichenstraße 90, 20255 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Kattjahren 4, 22359 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Hallerstraße 85, 20149 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'E-Ladesäule',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Kellinghusenstraße 10, 20249 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Groß Flottbeker Straße 72, 22607 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Johanniswall 6, 20095 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Bürgerweide 72, 20535 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Bundesstraße 35, 20146 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Seilerstraße 16, 20359 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Lessingstraße 21, 22087 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Drehbahn 13, 20354 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Holländische Reihe 27, 22765 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Krochmannstraße 2, 22299 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Sportallee 81, 22335 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Wilstorfer Straße 58, 21073 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Schaarsteinweg 4, 20459 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Johann-Meyer-Straße 54, 21031 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Mannesallee 28, 21107 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Hohenzollernring 24, 22763 Hamburg',
+      'latitude': None,
+      'status': '',
+    }),
+    dict({
+      'address': 'Englische Planke 16, 20459 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Tangstedter Landstraße 83, 22415 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Marienthaler Straße 1, 20535 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+    dict({
+      'address': 'Steintwiete 18, 20459 Hamburg',
+      'latitude': None,
+      'status': 'available',
+    }),
+    dict({
+      'address': 'Beim Berliner Tor 2, 20099 Hamburg',
+      'latitude': None,
+      'status': 'charging',
+    }),
+  ])
+# ---
