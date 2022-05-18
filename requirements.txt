@@ -1,4 +1,5 @@
 jmespath
+xmltodict
 influxdb-client[ciso]
 python-dotenv
 requests
