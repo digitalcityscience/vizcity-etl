@@ -1,10 +1,9 @@
-import os
 from dataclasses import dataclass
 from typing import Any, List
-from unicodedata import name
-
+from models import StadtradStation
 import jmespath
 import xmltodict
+from datetime import datetime
 
 
 @dataclass
@@ -111,18 +110,6 @@ def extract_parking_usage_lazytown(xml_data: str) -> List[ParkingLazyTown]:
     return list(map(remap_entry, entries))
 
 
-@dataclass
-class StadtradStation:
-    name: str
-    count: int
-    count_pedelec: int
-    count_bike: int
-    count_cargobike_electric: int
-    lat: float
-    lon: float
-    timestamp: float
-
-
 def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
     xml = xmltodict.parse(xml_data, process_namespaces=False)
     entries = [
@@ -147,7 +134,9 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
             count_cargobike_electric=xml_entry.get(
                 "de.hh.up:anzahl_cargobike_electric", 0
             ),
-            timestamp=xml_entry.get("de.hh.up:stand"),
+            timestamp=datetime.strptime(
+                str(round(float(xml_entry.get("de.hh.up:stand")), 6)), "%Y%m%d%H%M%S.%f"
+            ),
         )
 
     return list(map(remap_entry, entries))
