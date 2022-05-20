@@ -1,6 +1,6 @@
 import json
 import os
-from parse import extract_ev_charging_events, extract_parking_usage
+from parse import extract_ev_charging_events, extract_parking_usage, extract_stadtrad_stations
 
 
 def test_extract_ev_charging_events(snapshot):
@@ -18,3 +18,11 @@ def test_extract_parking_usage(snapshot):
     )
     with open(fixture_file) as xml_file:
         assert extract_parking_usage(xml_file.read()) == snapshot
+
+
+def test_extract_stadtrad_stations(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "stadtrad_stationen.xml"
+    )
+    with open(fixture_file) as xml_file:
+        assert extract_stadtrad_stations(xml_file.read()) == snapshot

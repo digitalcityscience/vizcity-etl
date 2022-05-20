@@ -108,3 +108,45 @@ def extract_parking_usage_lazytown(xml_data: str) -> List[ParkingLazyTown]:
         )
 
     return list(map(remap_entry, entries))
+
+
+@dataclass
+class StadtradStation:
+    name: str
+    count: int
+    count_pedelec: int
+    count_bike: int
+    count_cargobike_electric: int
+    lat: float
+    lon: float
+    timestamp: float
+
+
+def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
+    xml = xmltodict.parse(xml_data, process_namespaces=False)
+    entries = [
+        entry["de.hh.up:stadtrad_stationen"]
+        for entry in xml["wfs:FeatureCollection"]["wfs:member"]
+    ]
+
+    def remap_entry(xml_entry) -> StadtradStation:
+        location = (
+            xml_entry.get("de.hh.up:geom", {})
+            .get("gml:Point", {})
+            .get("gml:pos", "0 0")
+            .split()
+        )
+        return StadtradStation(
+            name=xml_entry["de.hh.up:name"],
+            lat=float(location[0]),
+            lon=float(location[1]),
+            count=xml_entry.get("de.hh.up:anzahl_raeder", 0),
+            count_bike=xml_entry.get("de.hh.up:anzahl_bike", 0),
+            count_pedelec=xml_entry.get("de.hh.up:anzahl_pedelec", 0),
+            count_cargobike_electric=xml_entry.get(
+                "de.hh.up:anzahl_cargobike_electric", 0
+            ),
+            timestamp=xml_entry.get("de.hh.up:stand"),
+        )
+
+    return list(map(remap_entry, entries))
