@@ -1055,3 +1055,13 @@
     StadtradStation(name='U Gänsemarkt / Caffamacherreihe', count='2', count_pedelec='0', count_bike='2', count_cargobike_electric='0', lat=565206.593, lon=5934584.464, timestamp='20220520214117.9194668'),
   ])
 # ---
+# name: test_extract_weather_sensors
+  list([
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='1735', street='BAB A1', vonnullpunkt=242600007, nachnullpunkt=242600012, lat=573932.94, lon=5930284.25),
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='1588', street='BAB A25', vonnullpunkt=252700004, nachnullpunkt=252700005, lat=579657.6, lon=5925674.55),
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='98', street='BAB A7', vonnullpunkt=252500101, nachnullpunkt=252500102, lat=561659.61, lon=5921072.12),
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='355', street='BAB A1', vonnullpunkt=252600102, nachnullpunkt=252600101, lat=567848.65, lon=5925730.32),
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='1555', street='BAB A1', vonnullpunkt=242600019, nachnullpunkt=242600001, lat=570153.15, lon=5929454.68),
+    WeatherSensor(timestamp='2022-05-20T19:47:35Z', station='1453', street='BAB A7', vonnullpunkt=242500131, nachnullpunkt=242500007, lat=561265.36, lon=5930501.92),
+  ])
+# ---

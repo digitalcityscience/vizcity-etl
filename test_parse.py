@@ -1,6 +1,6 @@
 import json
 import os
-from parse import extract_ev_charging_events, extract_parking_usage, extract_stadtrad_stations
+from parse import extract_ev_charging_events, extract_parking_usage, extract_stadtrad_stations, extract_weather_sensors
 
 
 def test_extract_ev_charging_events(snapshot):
@@ -26,3 +26,13 @@ def test_extract_stadtrad_stations(snapshot):
     )
     with open(fixture_file) as xml_file:
         assert extract_stadtrad_stations(xml_file.read()) == snapshot
+
+
+def test_extract_weather_sensors(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "swis_sensoren.xml"
+    )
+    with open(fixture_file) as xml_file:
+        result = extract_weather_sensors(xml_file.read())
+        assert "2022-05-20T19:47:35Z" == result[0].timestamp
+        assert result == snapshot

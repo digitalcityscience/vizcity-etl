@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wfs:FeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd http://www.deegree.org/app https://geodienste.hamburg.de/DE_HH_INSPIRE_WFS_SWIS_Sensoren?SERVICE=WFS&amp;VERSION=1.1.0&amp;REQUEST=DescribeFeatureType&amp;OUTPUTFORMAT=text%2Fxml%3B+subtype%3Dgml%2F3.1.1&amp;TYPENAME=app:swis_sensoren&amp;NAMESPACE=xmlns(app=http%3A%2F%2Fwww.deegree.org%2Fapp)" xmlns:wfs="http://www.opengis.net/wfs" timeStamp="2022-05-20T19:47:35Z" xmlns:gml="http://www.opengis.net/gml">
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_631">
+      <app:dwd_kennung>C234</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A1</app:strasse>
+      <app:vonnullpunkt>242600007</app:vonnullpunkt>
+      <app:nachnullpunkt>242600012</app:nachnullpunkt>
+      <app:station>1735</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_631_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_631_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>573932.940 5930284.250</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_632">
+      <app:dwd_kennung>C325</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A25</app:strasse>
+      <app:vonnullpunkt>252700004</app:vonnullpunkt>
+      <app:nachnullpunkt>252700005</app:nachnullpunkt>
+      <app:station>1588</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_632_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_632_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>579657.600 5925674.550</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_633">
+      <app:dwd_kennung>C309</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A7</app:strasse>
+      <app:vonnullpunkt>252500101</app:vonnullpunkt>
+      <app:nachnullpunkt>252500102</app:nachnullpunkt>
+      <app:station>98</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_633_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_633_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>561659.610 5921072.120</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_634">
+      <app:dwd_kennung>C315</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A1</app:strasse>
+      <app:vonnullpunkt>252600102</app:vonnullpunkt>
+      <app:nachnullpunkt>252600101</app:nachnullpunkt>
+      <app:station>355</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_634_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_634_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>567848.650 5925730.320</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_635">
+      <app:dwd_kennung>C311</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A1</app:strasse>
+      <app:vonnullpunkt>242600019</app:vonnullpunkt>
+      <app:nachnullpunkt>242600001</app:nachnullpunkt>
+      <app:station>1555</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_635_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_635_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>570153.150 5929454.680</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:swis_sensoren xmlns:app="http://www.deegree.org/app" gml:id="APP_SWIS_SENSOREN_636">
+      <app:dwd_kennung>C207</app:dwd_kennung>
+      <app:dwd_bezeichnung></app:dwd_bezeichnung>
+      <app:strasse>BAB A7</app:strasse>
+      <app:vonnullpunkt>242500131</app:vonnullpunkt>
+      <app:nachnullpunkt>242500007</app:nachnullpunkt>
+      <app:station>1453</app:station>
+      <app:ort>Hamburg</app:ort>
+      <app:art>SWIS-Sensor</app:art>
+      <app:geom>
+        <!--Inlined geometry 'APP_SWIS_SENSOREN_636_APP_GEOM'-->
+        <gml:Point gml:id="APP_SWIS_SENSOREN_636_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>561265.360 5930501.920</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:swis_sensoren>
+  </gml:featureMember>
+</wfs:FeatureCollection>

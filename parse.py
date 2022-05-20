@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from typing import Any, List
+from unicodedata import name
 
 import jmespath
 import xmltodict
@@ -147,6 +148,45 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
                 "de.hh.up:anzahl_cargobike_electric", 0
             ),
             timestamp=xml_entry.get("de.hh.up:stand"),
+        )
+
+    return list(map(remap_entry, entries))
+
+
+@dataclass
+class WeatherSensor:
+    timestamp: str
+    station: str
+    street: str
+    vonnullpunkt: int
+    nachnullpunkt: int
+    lat: float
+    lon: float
+
+
+def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
+    xml = xmltodict.parse(xml_data, process_namespaces=False)
+    entries = [
+        entry["app:swis_sensoren"]
+        for entry in xml["wfs:FeatureCollection"]["gml:featureMember"]
+    ]
+    timestamp = xml.get("wfs:FeatureCollection", {}).get("@timeStamp", datetime.now())
+
+    def remap_entry(xml_entry) -> WeatherSensor:
+        location = (
+            xml_entry.get("app:geom", {})
+            .get("gml:Point", {})
+            .get("gml:pos", "0 0")
+            .split()
+        )
+        return WeatherSensor(
+            station=xml_entry["app:station"],
+            street=xml_entry["app:strasse"],
+            vonnullpunkt=int(xml_entry.get("app:vonnullpunkt", 0)),
+            nachnullpunkt=int(xml_entry.get("app:nachnullpunkt", 0)),
+            lat=float(location[0]),
+            lon=float(location[1]),
+            timestamp=timestamp,
         )
 
     return list(map(remap_entry, entries))
