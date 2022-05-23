@@ -19,13 +19,13 @@ class StadtradStation:
         return (
             Point("stadtrad_station")
             .tag("name", self.name)
-            .tag("count_pedelec", self.count_pedelec)
-            .tag("count_bike", self.count_bike)
-            .tag("count_cargobike_electric", self.count_cargobike_electric)
+            .field("count", self.count)
+            .field("count_pedelec", self.count_pedelec)
+            .field("count_bike", self.count_bike)
+            .field("count_cargobike_electric", self.count_cargobike_electric)
             .tag("lat", self.lat)
             .tag("lon", self.lon)
-            .field("count", self.count)
-            .time(self.timestamp)
+            .time(datetime.now())
         )
 
 

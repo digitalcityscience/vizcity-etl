@@ -130,11 +130,11 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
             name=xml_entry["de.hh.up:name"],
             lat=float(location[0]),
             lon=float(location[1]),
-            count=xml_entry.get("de.hh.up:anzahl_raeder", 0),
-            count_bike=xml_entry.get("de.hh.up:anzahl_bike", 0),
-            count_pedelec=xml_entry.get("de.hh.up:anzahl_pedelec", 0),
-            count_cargobike_electric=xml_entry.get(
-                "de.hh.up:anzahl_cargobike_electric", 0
+            count=int(xml_entry.get("de.hh.up:anzahl_raeder", 0)),
+            count_bike=int(xml_entry.get("de.hh.up:anzahl_bike", 0)),
+            count_pedelec=int(xml_entry.get("de.hh.up:anzahl_pedelec", 0)),
+            count_cargobike_electric=int(
+                xml_entry.get("de.hh.up:anzahl_cargobike_electric", 0)
             ),
             timestamp=datetime.strptime(
                 str(round(float(xml_entry.get("de.hh.up:stand")), 6)), "%Y%m%d%H%M%S.%f"

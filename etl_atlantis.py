@@ -3,8 +3,7 @@ from typing import Callable
 import requests
 
 from influxdb import write_points_to_influx
-from parse import ( extract_stadtrad_stations,
-                   extract_weather_sensors)
+from parse import extract_stadtrad_stations, extract_weather_sensors
 
 BUCKET = "atlantis"
 
@@ -35,4 +34,7 @@ def collect_swis():
     )
 
 
-collect_swis()
+def collect():
+    collect_stadtrad()
+    collect_swis()
+
