@@ -1,0 +1,312 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wfs:FeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd http://www.deegree.org/app https://geodienste.hamburg.de/HH_WFS_Luftmessnetz?SERVICE=WFS&amp;VERSION=1.1.0&amp;REQUEST=DescribeFeatureType&amp;OUTPUTFORMAT=text%2Fxml%3B+subtype%3Dgml%2F3.1.1&amp;TYPENAME=app:luftmessnetz_messwerte&amp;NAMESPACE=xmlns(app=http%3A%2F%2Fwww.deegree.org%2Fapp)" xmlns:wfs="http://www.opengis.net/wfs" timeStamp="2022-05-23T14:25:28Z" xmlns:gml="http://www.opengis.net/gml">
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658009">
+      <app:stationskuerzel>80KT</app:stationskuerzel>
+      <app:name>Altona-Elbhang</app:name>
+      <app:adresse>Olbertsweg, am Park</app:adresse>
+      <app:stationstyp>Hintergrundmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>H</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:PM10>1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658009_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658009_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>562609.000 5933343.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658010">
+      <app:stationskuerzel>21BI</app:stationskuerzel>
+      <app:name>Billbrook</app:name>
+      <app:adresse>Pinkertweg, am Industriekanal</app:adresse>
+      <app:stationstyp>Hintergrund- und Meteorologiemessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>HM</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>-1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:PM10>-1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658010_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658010_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>571730.000 5931713.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658011">
+      <app:stationskuerzel>51BF</app:stationskuerzel>
+      <app:name>Bramfeld</app:name>
+      <app:adresse>Umweltzentrum Karlshöhe</app:adresse>
+      <app:stationstyp>Ozonmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>O</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>3</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:O3>3</app:O3>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658011_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658011_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>573434.000 5943029.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658012">
+      <app:stationskuerzel>73FW</app:stationskuerzel>
+      <app:name>Finkenwerder Airbus</app:name>
+      <app:adresse>Auf dem Gelände der Flugzeugwerft</app:adresse>
+      <app:stationstyp>Hintergrundmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>H</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658012_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658012_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>555123.000 5931705.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658013">
+      <app:stationskuerzel>72FI</app:stationskuerzel>
+      <app:name>Finkenwerder West</app:name>
+      <app:adresse>Neßkatenweg 1a</app:adresse>
+      <app:stationstyp>Hintergrund- und Meteorologiemessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>HM</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>-1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:PM10>-1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658013_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658013_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>555952.000 5932257.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658014">
+      <app:stationskuerzel>24FL</app:stationskuerzel>
+      <app:name>Flughafen</app:name>
+      <app:adresse>Flughafengelände, Nähe Holtkoppel</app:adresse>
+      <app:stationstyp>Hintergrund- und Ozonmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>HO</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>3</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:O3>3</app:O3>
+      <app:CO>1</app:CO>
+      <app:PM10>1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658014_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658014_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>565945.000 5943731.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658015">
+      <app:stationskuerzel>68HB</app:stationskuerzel>
+      <app:name>Habichtstraße</app:name>
+      <app:adresse>Habichtstraße 59-61</app:adresse>
+      <app:stationstyp>Verkehrsmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>V</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>3</app:LQI>
+      <app:NO2>3</app:NO2>
+      <app:CO>1</app:CO>
+      <app:PM10>2</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658015_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658015_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>569743.000 5938684.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658016">
+      <app:stationskuerzel>82HF</app:stationskuerzel>
+      <app:name>Hafen/Kl. Grasbrook</app:name>
+      <app:adresse>Worthdamm 49</app:adresse>
+      <app:stationstyp>Hintergrundmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>H</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:PM10>1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658016_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658016_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>565068.000 5931586.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658017">
+      <app:stationskuerzel>64KS</app:stationskuerzel>
+      <app:name>Kieler Straße</app:name>
+      <app:adresse>Kieler Straße 13</app:adresse>
+      <app:stationstyp>Verkehrsmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>V</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>2</app:LQI>
+      <app:NO2>2</app:NO2>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658017_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658017_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>562563.000 5935470.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658018">
+      <app:stationskuerzel>70MB</app:stationskuerzel>
+      <app:name>Max-Brauer-Allee II</app:name>
+      <app:adresse>Max-Brauer-Allee 92/94</app:adresse>
+      <app:stationstyp>Verkehrsmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>V</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>2</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:CO>1</app:CO>
+      <app:PM10>2</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658018_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658018_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>562473.000 5934507.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658019">
+      <app:stationskuerzel>52NG</app:stationskuerzel>
+      <app:name>Neugraben</app:name>
+      <app:adresse>Neugrabener Dorf 79/81</app:adresse>
+      <app:stationstyp>Ozonmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>O</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>3</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:O3>3</app:O3>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658019_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658019_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>556885.000 5926120.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658020">
+      <app:stationskuerzel>13ST</app:stationskuerzel>
+      <app:name>Sternschanze</app:name>
+      <app:adresse>Dänenweg</app:adresse>
+      <app:stationstyp>Hintergrund- und Ozonmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>HO</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>3</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:O3>3</app:O3>
+      <app:PM10>1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658020_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658020_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>564134.000 5935504.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658021">
+      <app:stationskuerzel>17SM</app:stationskuerzel>
+      <app:name>Stresemannstraße</app:name>
+      <app:adresse>Stresemannstraße 95</app:adresse>
+      <app:stationstyp>Verkehrsmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>V</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>2</app:LQI>
+      <app:NO2>2</app:NO2>
+      <app:PM10>2</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658021_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658021_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>563414.000 5935091.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658022">
+      <app:stationskuerzel>20VE</app:stationskuerzel>
+      <app:name>Veddel</app:name>
+      <app:adresse>Am Zollhafen</app:adresse>
+      <app:stationstyp>Hintergrundmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>H</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>2</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:PM10>2</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658022_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658022_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>567752.000 5930928.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+  <gml:featureMember>
+    <app:luftmessnetz_messwerte xmlns:app="http://www.deegree.org/app" gml:id="APP_LUFTMESSNETZ_MESSWERTE_658023">
+      <app:stationskuerzel>61WB</app:stationskuerzel>
+      <app:name>Wilhelmsburg</app:name>
+      <app:adresse>Rotenhäuser Damm 78a</app:adresse>
+      <app:stationstyp>Hintergrundmessstation</app:stationstyp>
+      <app:stationstyp_kuerzel>H</app:stationstyp_kuerzel>
+      <app:datum>2022-05-23</app:datum>
+      <app:messzeit>16:00:00</app:messzeit>
+      <app:LQI>1</app:LQI>
+      <app:NO2>1</app:NO2>
+      <app:SO2>1</app:SO2>
+      <app:PM10>1</app:PM10>
+      <app:geom>
+        <!--Inlined geometry 'APP_LUFTMESSNETZ_MESSWERTE_658023_APP_GEOM'-->
+        <gml:Point gml:id="APP_LUFTMESSNETZ_MESSWERTE_658023_APP_GEOM" srsName="EPSG:25832">
+          <gml:pos>565692.000 5929231.000</gml:pos>
+        </gml:Point>
+      </app:geom>
+    </app:luftmessnetz_messwerte>
+  </gml:featureMember>
+</wfs:FeatureCollection>

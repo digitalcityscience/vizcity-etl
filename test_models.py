@@ -1,6 +1,8 @@
 from datetime import datetime
-from models import StadtradStation
+
 from influxdb_client import Point
+
+from models import StadtradStation
 
 
 def test_stadtrad_station_to_point():
@@ -17,12 +19,12 @@ def test_stadtrad_station_to_point():
     expected = (
         Point("stadtrad_station")
         .tag("name", given.name)
-        .tag("count_pedelec", given.count_pedelec)
-        .tag("count_bike", given.count_bike)
-        .tag("count_cargobike_electric", given.count_cargobike_electric)
+        .field("count_pedelec", given.count_pedelec)
+        .field("count_bike", given.count_bike)
+        .field("count_cargobike_electric", given.count_cargobike_electric)
+        .field("count", given.count)
         .tag("lat", given.lat)
         .tag("lon", given.lon)
-        .field("count", given.count)
         .time(given.timestamp)
     )
     assert expected.to_line_protocol() == given.to_point().to_line_protocol()

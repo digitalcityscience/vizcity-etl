@@ -1,6 +1,14 @@
 import json
 import os
-from parse import extract_ev_charging_events, extract_parking_usage, extract_stadtrad_stations, extract_weather_sensors
+from datetime import datetime
+
+from parse import (
+    extract_air_quality,
+    extract_ev_charging_events,
+    extract_parking_usage,
+    extract_stadtrad_stations,
+    extract_weather_sensors,
+)
 
 
 def test_extract_ev_charging_events(snapshot):
@@ -35,4 +43,14 @@ def test_extract_weather_sensors(snapshot):
     with open(fixture_file) as xml_file:
         result = extract_weather_sensors(xml_file.read())
         assert "2022-05-20T19:47:35Z" == result[0].timestamp
+        assert result == snapshot
+
+
+def test_extract_air_quality(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "luftmessnetz_messwerte.xml"
+    )
+    with open(fixture_file) as xml_file:
+        result = extract_air_quality(xml_file.read())
+        assert datetime(2022, 5, 23, 16, 0) == result[0].timestamp
         assert result == snapshot

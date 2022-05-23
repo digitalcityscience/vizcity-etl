@@ -1,12 +1,11 @@
 import os
-from collections import namedtuple
 from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, List
 
 from dotenv import load_dotenv
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS, Point
+from influxdb_client.domain import WritePrecision
 
 load_dotenv()
 
@@ -27,10 +26,11 @@ class InfluxPayload:
     field_keys: List[str]
 
 
-def write_points_to_influx(bucket:str, points: List[Point]):
+def write_points_to_influx(bucket: str, points: List[Point]):
     with InfluxDBClient(**INFLUX_CONFIG) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket, record=points)
+
 
 def write_to_influx(payload: InfluxPayload):
     with InfluxDBClient(**INFLUX_CONFIG) as client:

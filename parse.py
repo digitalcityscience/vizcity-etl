@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, List
+from typing import Any, Dict, List
 
 import jmespath
 import xmltodict
 
-from models import StadtradStation, WeatherSensor
+from models import AirQuality, StadtradStation, WeatherSensor
 
 
 @dataclass
@@ -167,6 +167,38 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
             lat=float(location[0]),
             lon=float(location[1]),
             timestamp=timestamp,
+        )
+
+    return list(map(remap_entry, entries))
+
+
+def remap_location(xml_entry: Dict):
+    location = (
+        xml_entry.get("app:geom", {}).get("gml:Point", {}).get("gml:pos", "0 0").split()
+    )
+    return float(location[0]), float(location[1])
+
+
+def extract_air_quality(xml_data: str) -> List[AirQuality]:
+    xml = xmltodict.parse(xml_data, process_namespaces=False)
+    entries = [
+        entry["app:luftmessnetz_messwerte"]
+        for entry in xml["wfs:FeatureCollection"]["gml:featureMember"]
+    ]
+
+    def remap_entry(xml_entry) -> AirQuality:
+        return AirQuality(
+            station_id=xml_entry["app:stationskuerzel"],
+            street=xml_entry["app:adresse"],
+            name=xml_entry["app:name"],
+            station_type=xml_entry["app:stationstyp"],
+            lqi=float(xml_entry.get("app:LQI", 0)),
+            no2=float(xml_entry.get("app:NO2", 0)),
+            so2=float(xml_entry.get("app:SO2", 0)),
+            pm10=float(xml_entry.get("app:PM10", 0)),
+            lat=remap_location(xml_entry)[0],
+            lon=remap_location(xml_entry)[1],
+            timestamp=datetime.now()
         )
 
     return list(map(remap_entry, entries))
