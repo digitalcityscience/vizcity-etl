@@ -2,7 +2,7 @@ help:
 	@echo "for now, you are on your own"
 
 init:
-	python3 -m venv --prompt iot-parser .venv
+	python3 -m venv --prompt vizcity-etl .venv
 	source .venv/bin/activate
 
 install:
