@@ -27,3 +27,26 @@ class StadtradStation:
             .field("count", self.count)
             .time(self.timestamp)
         )
+
+
+@dataclass
+class WeatherSensor:
+    timestamp: str
+    station: str
+    street: str
+    vonnullpunkt: int
+    nachnullpunkt: int
+    lat: float
+    lon: float
+
+    def to_point(self) -> Point:
+        return (
+            Point("swis_sensor")
+            .tag("station", self.station)
+            .tag("street", self.street)
+            .tag("nachnullpunkt", self.nachnullpunkt)
+            .tag("lat", self.lat)
+            .tag("lon", self.lon)
+            .field("vonnullpunkt", self.vonnullpunkt)
+            .time(self.timestamp)
+        )

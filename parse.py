@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, List
-from models import StadtradStation
+
 import jmespath
 import xmltodict
-from datetime import datetime
+
+from models import StadtradStation, WeatherSensor
 
 
 @dataclass
@@ -140,17 +142,6 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
         )
 
     return list(map(remap_entry, entries))
-
-
-@dataclass
-class WeatherSensor:
-    timestamp: str
-    station: str
-    street: str
-    vonnullpunkt: int
-    nachnullpunkt: int
-    lat: float
-    lon: float
 
 
 def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
