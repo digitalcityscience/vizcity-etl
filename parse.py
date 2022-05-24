@@ -205,8 +205,8 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             lat=remap_location(xml_entry)[0],
             lon=remap_location(xml_entry)[1],
             timestamp=datetime.strptime(
-                f'{xml_entry.get("app:datum")}{xml_entry.get("app:messzeit")}',
-                "%Y-%m-%d%H:%M:%S",
+                f'{xml_entry.get("app:datum")}{xml_entry.get("app:messzeit")}Z',
+                "%Y-%m-%d%H:%M:%S%z",
             ),
         )
 

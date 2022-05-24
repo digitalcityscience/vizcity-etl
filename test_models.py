@@ -1,9 +1,9 @@
-from datetime import date, datetime
+from datetime import date, datetime,timezone
 from xml.etree.ElementTree import fromstring
 
 from influxdb_client import Point
 
-from models import StadtradStation, TrafficStatus
+from models import AirQuality, StadtradStation, TrafficStatus
 
 
 def test_stadtrad_station_to_point():
@@ -44,3 +44,23 @@ def test_traffic_status_to_point():
         .time(given.timestamp)
     )
     assert expected.to_line_protocol() == given.to_point().to_line_protocol()
+
+
+def test_air_quality_to_point():
+    given = AirQuality(
+        lat=562609.0,
+        lon=5933343.0,
+        name="Altona-Elbhang",
+        station_type="Hintergrundmessstation",
+        station_id="80KT",
+        street="Olbertsweg, am Park",
+        lqi=1.0,
+        no2=1.0,
+        so2=1.0,
+        pm10=1.0,
+        timestamp=datetime(2022, 5, 23, 16, 0, tzinfo=timezone.utc),
+    )
+    expected = "luftmessnetz_messwerte,lat=562609.0,lon=5933343.0,name=Altona-Elbhang,station_id=80KT,station_type=Hintergrundmessstation,street=Olbertsweg\,\ am\ Park lqi=1,no2=1,pm10=1,so2=1 1653321600000000000"
+    
+    assert datetime.fromtimestamp(1653321600, timezone.utc) == datetime(2022, 5, 23, 16, 0, tzinfo=timezone.utc)
+    assert expected == given.to_point().to_line_protocol()

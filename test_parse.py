@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 from parse import (
     extract_air_quality,
@@ -53,7 +53,7 @@ def test_extract_air_quality(snapshot):
     )
     with open(fixture_file) as xml_file:
         result = extract_air_quality(xml_file.read())
-        assert datetime(2022, 5, 23, 16, 0) == result[0].timestamp
+        assert datetime(2022, 5, 23, 16, 0, tzinfo=timezone.utc) == result[0].timestamp
         assert result == snapshot
 
 
