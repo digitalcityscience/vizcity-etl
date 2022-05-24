@@ -9,6 +9,7 @@ from parse import (
     extract_stadtrad_stations,
     extract_traffic_status,
     extract_weather_sensors,
+    parse_date_comma_time,
     parse_date_time,
     parse_timestamp_like,
 )
@@ -76,4 +77,10 @@ def test_parse_timestamp_like():
 def test_parse_date_time():
     assert parse_date_time("2022-05-23", "16:00:00") == datetime(
         2022, 5, 23, 16, 0, 0
+    ).astimezone(timezone.utc)
+
+
+def test_parse_date_comma_time():
+    assert parse_date_comma_time("24.05.2022, 23:45") == datetime(
+        2022, 5, 24, 23, 45, 0
     ).astimezone(timezone.utc)

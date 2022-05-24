@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 from influxdb_client import Point
 
@@ -106,3 +107,26 @@ class TrafficStatus(Location):
 @dataclass
 class BikeTrafficStatus(TrafficStatus):
     measurement_name = "fahrrad_verkehr"
+
+
+@dataclass
+class Parking(Location):
+    name: str
+    utilization: str
+    free: int
+    capacity: int
+    price: str
+    timestamp: Any
+
+    def to_point(self) -> Point:
+        return (
+            Point("parking-spaces")
+            .field("free", self.free)
+            .tag("name", self.name)
+            .tag("free", self.free)
+            .tag("capacity", self.capacity)
+            .tag("price", self.price)
+            .tag("lat", self.lat)
+            .tag("lon", self.lon)
+            .time(self.timestamp)
+        )

@@ -8,6 +8,7 @@ import xmltodict
 from models import (
     AirQuality,
     BikeTrafficStatus,
+    Parking,
     StadtradStation,
     TrafficStatus,
     WeatherSensor,
@@ -21,11 +22,22 @@ def parse_timestamp_like(timestamp_like: float) -> datetime:
         str(round(float(timestamp_like), 6)), "%Y%m%d%H%M%S.%f"
     ).astimezone(GERMANY_TIMEZONE)
 
+
 def parse_date_time(date: str, time: str) -> datetime:
     return datetime.strptime(
         f"{date}{time}",
         "%Y-%m-%d%H:%M:%S",
     ).astimezone(GERMANY_TIMEZONE)
+
+
+def parse_date_comma_time(date_comma_time: str) -> datetime:
+    print(date_comma_time)
+    date, time = date_comma_time.split(", ")
+    return datetime.strptime(
+        f"{date}-{time}",
+        "%d.%m.%Y-%H:%M",
+    ).astimezone(GERMANY_TIMEZONE)
+
 
 @dataclass
 class EvChargingStationEvent:
@@ -44,14 +56,6 @@ def extract_ev_charging_events(json_data: str) -> List[EvChargingStationEvent]:
     return result  # type: ignore
 
 
-@dataclass
-class Parking:
-    name: str
-    utilization: str
-    lat: float
-    lon: float
-
-
 def extract_parking_usage(xml_data: str) -> List[Parking]:
     collapsed_namespaces = {
         "http://www.opengis.net/wfs/2.0:member": "member",
@@ -65,67 +69,31 @@ def extract_parking_usage(xml_data: str) -> List[Parking]:
         for entry in xml["wfs:FeatureCollection"]["wfs:member"]
     ]
 
+    fallback_timestamp = xml.get("wfs:FeatureCollection", {}).get(
+        "@timeStamp", datetime.now()
+    )
+
     def remap_entry(xml_entry):
         location = (
             xml_entry.get("de.hh.up:position", {})
             .get("gml:Point", {})
             .get("gml:pos", "0 0")
             .split()
+        )
+        timestamp = (
+            fallback_timestamp
+            if not xml_entry.get("de.hh.up:received")
+            else parse_date_comma_time(xml_entry.get("de.hh.up:received"))
         )
         return Parking(
             name=xml_entry["de.hh.up:name"],
             utilization=xml_entry.get("de.hh.up:situation", "no_data"),
-            lat=location[0],
-            lon=location[1],
-        )
-
-    return list(map(remap_entry, entries))
-
-
-@dataclass
-class ParkingLazyTown:
-    name: str
-    utilization: str
-    lat: float
-    lon: float
-    free: int
-    capacity: int
-    price: str
-    timestamp: Any
-
-
-from datetime import datetime
-
-
-def extract_parking_usage_lazytown(xml_data: str) -> List[ParkingLazyTown]:
-    collapsed_namespaces = {
-        "http://www.opengis.net/wfs/2.0:member": "member",
-        "http://www.opengis.net/wfs/2.0:FeatureCollection": "collection",
-    }
-    xml = xmltodict.parse(
-        xml_data, process_namespaces=False, namespaces=collapsed_namespaces
-    )
-    entries = [
-        entry["de.hh.up:verkehr_parkhaeuser"]
-        for entry in xml["wfs:FeatureCollection"]["wfs:member"]
-    ]
-
-    def remap_entry(xml_entry):
-        location = (
-            xml_entry.get("de.hh.up:position", {})
-            .get("gml:Point", {})
-            .get("gml:pos", "0 0")
-            .split()
-        )
-        return ParkingLazyTown(
-            name=xml_entry["de.hh.up:name"],
-            utilization=xml_entry.get("de.hh.up:situation", "no_data"),
             lat=float(location[0]),
             lon=float(location[1]),
-            free=xml_entry.get("de.hh.up:frei", 0),
-            capacity=xml_entry.get("de.hh.up:gesamt", 0),
+            free=int(xml_entry.get("de.hh.up:frei", 0)),
+            capacity=int(xml_entry.get("de.hh.up:gesamt", 0)),
             price=xml_entry.get("de.hh.up:preise", ""),
-            timestamp=datetime.now(),  # xml_entry.get("de.hh.up:received"),
+            timestamp=timestamp,
         )
 
     return list(map(remap_entry, entries))
