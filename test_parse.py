@@ -7,6 +7,7 @@ from parse import (
     extract_ev_charging_events,
     extract_parking_usage,
     extract_stadtrad_stations,
+    extract_traffic_status,
     extract_weather_sensors,
 )
 
@@ -54,3 +55,12 @@ def test_extract_air_quality(snapshot):
         result = extract_air_quality(xml_file.read())
         assert datetime(2022, 5, 23, 16, 0) == result[0].timestamp
         assert result == snapshot
+
+
+def test_extract_traffic_status(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "traffic_status.json"
+    )
+    with open(fixture_file) as json_file:
+        data = json.load(json_file)
+        assert extract_traffic_status(data) == snapshot

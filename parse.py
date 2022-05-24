@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 import jmespath
 import xmltodict
 
-from models import AirQuality, StadtradStation, WeatherSensor
+from models import AirQuality, StadtradStation, TrafficStatus, WeatherSensor
 
 
 @dataclass
@@ -205,3 +205,11 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
         )
 
     return list(map(remap_entry, entries))
+
+
+def extract_traffic_status(json_data: str) -> List[TrafficStatus]:
+    results = jmespath.search(
+        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
+        json_data,
+    )  
+    return list(map(lambda result: TrafficStatus(**result), results))  # type: ignore
