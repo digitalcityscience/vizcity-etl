@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
 import jmespath
@@ -13,6 +13,19 @@ from models import (
     WeatherSensor,
 )
 
+GERMANY_TIMEZONE = timezone(+timedelta(hours=2))
+
+
+def parse_timestamp_like(timestamp_like: float) -> datetime:
+    return datetime.strptime(
+        str(round(float(timestamp_like), 6)), "%Y%m%d%H%M%S.%f"
+    ).astimezone(GERMANY_TIMEZONE)
+
+def parse_date_time(date: str, time: str) -> datetime:
+    return datetime.strptime(
+        f"{date}{time}",
+        "%Y-%m-%d%H:%M:%S",
+    ).astimezone(GERMANY_TIMEZONE)
 
 @dataclass
 class EvChargingStationEvent:
@@ -142,9 +155,7 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
             count_cargobike_electric=int(
                 xml_entry.get("de.hh.up:anzahl_cargobike_electric", 0)
             ),
-            timestamp=datetime.strptime(
-                str(round(float(xml_entry.get("de.hh.up:stand")), 6)), "%Y%m%d%H%M%S.%f"
-            ),
+            timestamp=parse_timestamp_like(xml_entry.get("de.hh.up:stand")),
         )
 
     return list(map(remap_entry, entries))
@@ -204,9 +215,8 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             pm10=float(xml_entry.get("app:PM10", 0)),
             lat=remap_location(xml_entry)[0],
             lon=remap_location(xml_entry)[1],
-            timestamp=datetime.strptime(
-                f'{xml_entry.get("app:datum")}{xml_entry.get("app:messzeit")}Z',
-                "%Y-%m-%d%H:%M:%S%z",
+            timestamp=parse_date_time(
+                date=xml_entry.get("app:datum"), time=xml_entry.get("app:messzeit")
             ),
         )
 
