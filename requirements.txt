@@ -1,5 +1,5 @@
 jmespath
 xmltodict
-influxdb-client[ciso]
+influxdb-client
 python-dotenv
 requests
