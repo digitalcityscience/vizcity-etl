@@ -5,6 +5,7 @@ import requests
 from influxdb import write_points_to_influx
 from parse import (
     extract_air_quality,
+    extract_bike_traffic_status,
     extract_stadtrad_stations,
     extract_traffic_status,
     extract_weather_sensors,
@@ -57,12 +58,20 @@ def collect_traffic_status():
         True,
     )
 
+def collect_bike_traffic_status():
+    fetch_and_transform_geoportal_events(
+        "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_HamburgerRadzaehlnetz' and Datastreams/properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min'&$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
+        extract_bike_traffic_status,
+        True,
+    )
+
 
 def collect():
     collect_stadtrad()
     collect_swis()
     collect_air_quality()
     collect_traffic_status()
+    collect_bike_traffic_status()
 
 
 collect()

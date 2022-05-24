@@ -91,12 +91,18 @@ class AirQuality(Location):
 class TrafficStatus(Location):
     timestamp: datetime
     counted_traffic: int
+    measurement_name = "kfz_verkehr"
 
     def to_point(self) -> Point:
         return (
-            Point("kfz_verkehr")
+            Point(self.measurement_name)
             .time(self.timestamp)
             .field("counted_traffic", self.counted_traffic)
             .tag("lat", self.lat)
             .tag("lon", self.lon)
         )
+
+
+@dataclass
+class BikeTrafficStatus(TrafficStatus):
+    measurement_name = "fahrrad_verkehr"
