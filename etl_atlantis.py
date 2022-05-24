@@ -67,11 +67,11 @@ def collect_bike_traffic_status():
 
 
 def collect():
+    collect_traffic_status()
+    collect_bike_traffic_status()
     collect_stadtrad()
     collect_swis()
     collect_air_quality()
-    collect_traffic_status()
-    collect_bike_traffic_status()
 
 
 collect()
