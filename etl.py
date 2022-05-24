@@ -3,6 +3,7 @@ from typing import Callable
 import requests
 
 from influxdb import write_points_to_influx
+from parse import extract_stadtrad_stations, extract_weather_sensors
 
 
 def fetch_and_transform_geoportal_events(
@@ -19,3 +20,19 @@ def fetch_and_transform_geoportal_events(
         f"Writing to timeseries db {[event.to_line_protocol() for event in events_points]} ..."
     )
     write_points_to_influx(bucket, events_points)
+
+
+def collect_stadtrad(bucket: str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://geodienste.hamburg.de/HH_WFS_Stadtrad?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typename=de.hh.up:stadtrad_stationen",
+        extract_stadtrad_stations,
+    )
+
+
+def collect_swis(bucket:str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://geodienste.hamburg.de/DE_HH_INSPIRE_WFS_SWIS_Sensoren?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typename=app:swis_sensoren",
+        extract_weather_sensors,
+    )
