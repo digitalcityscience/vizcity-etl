@@ -198,7 +198,10 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             pm10=float(xml_entry.get("app:PM10", 0)),
             lat=remap_location(xml_entry)[0],
             lon=remap_location(xml_entry)[1],
-            timestamp=datetime.now()
+            timestamp=datetime.strptime(
+                f'{xml_entry.get("app:datum")}{xml_entry.get("app:messzeit")}',
+                "%Y-%m-%d%H:%M:%S",
+            ),
         )
 
     return list(map(remap_entry, entries))
