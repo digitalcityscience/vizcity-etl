@@ -58,6 +58,7 @@ def collect_traffic_status():
         True,
     )
 
+
 def collect_bike_traffic_status():
     fetch_and_transform_geoportal_events(
         "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_HamburgerRadzaehlnetz' and Datastreams/properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min'&$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
@@ -72,6 +73,3 @@ def collect():
     collect_stadtrad()
     collect_swis()
     collect_air_quality()
-
-
-collect()

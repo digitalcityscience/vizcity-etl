@@ -1,3 +1,5 @@
+TAG=ghcr.io/digitalcityscience/vizcity-etl
+
 help:
 	@echo "for now, you are on your own"
 
@@ -13,3 +15,9 @@ test: test_*.py
 
 update-snapshot:
 	python -m pytest --snapshot-update
+
+docker:
+	docker build --network=host -t ${TAG}:latest .
+
+run-docker: 
+	docker run --rm ${TAG}
