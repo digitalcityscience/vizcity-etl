@@ -3,7 +3,7 @@ from typing import Callable
 import requests
 
 from influxdb import write_points_to_influx
-from parse import extract_ev_charging_events, extract_stadtrad_stations, extract_weather_sensors
+from parse import extract_air_quality, extract_ev_charging_events, extract_stadtrad_stations, extract_weather_sensors
 
 
 def fetch_and_transform_geoportal_events(
@@ -29,6 +29,12 @@ def collect_stadtrad(bucket: str):
         extract_stadtrad_stations,
     )
 
+def collect_air_quality(bucket:str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://geodienste.hamburg.de/HH_WFS_Luftmessnetz?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typename=app:luftmessnetz_messwerte",
+        extract_air_quality,
+    )
 
 def collect_swis(bucket:str):
     fetch_and_transform_geoportal_events(

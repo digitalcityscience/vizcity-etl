@@ -1,11 +1,10 @@
 from typing import Callable
 
 import requests
-from etl import collect_stadtrad, collect_swis
+from etl import collect_air_quality, collect_stadtrad, collect_swis
 
 from influxdb import write_points_to_influx
 from parse import (
-    extract_air_quality,
     extract_bike_traffic_status,
     extract_traffic_status,
 )
@@ -29,13 +28,6 @@ def fetch_and_transform_geoportal_events(
     write_points_to_influx(BUCKET, events_points)
 
 
-def collect_air_quality():
-    fetch_and_transform_geoportal_events(
-        "https://geodienste.hamburg.de/HH_WFS_Luftmessnetz?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typename=app:luftmessnetz_messwerte",
-        extract_air_quality,
-    )
-
-
 def collect_traffic_status():
     fetch_and_transform_geoportal_events(
         "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_AutomatisierteVerkehrsmengenerfassung'  and Datastreams/properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min' &$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
@@ -57,4 +49,4 @@ def collect():
     collect_bike_traffic_status()
     collect_stadtrad(BUCKET)
     collect_swis(BUCKET)
-    collect_air_quality()
+    collect_air_quality(BUCKET)
