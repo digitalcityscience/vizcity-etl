@@ -21,7 +21,9 @@ def test_extract_ev_charging_events(snapshot):
     )
     with open(fixture_file) as json_file:
         data = json.load(json_file)
-        assert extract_ev_charging_events(data) == snapshot
+        result = extract_ev_charging_events(data) 
+        assert "2022-05-17T17:26:35.610Z" == result[0].timestamp
+        assert result == snapshot
 
 
 def test_extract_parking_usage(snapshot):

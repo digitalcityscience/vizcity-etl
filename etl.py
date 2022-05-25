@@ -40,7 +40,7 @@ def collect_swis(bucket:str):
 def collect_e_charging_stations(bucket:str):
     fetch_and_transform_geoportal_events(
         bucket,
-        "https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_E-Ladestationen'&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1),Sensor,ObservedProperty)",
+        "https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_E-Ladestationen'&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1;$orderby=phenomenonTime desc),Sensor,ObservedProperty)",
         extract_ev_charging_events,
         True
     )
