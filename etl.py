@@ -3,7 +3,7 @@ from typing import Callable
 import requests
 
 from influxdb import write_points_to_influx
-from parse import extract_stadtrad_stations, extract_weather_sensors
+from parse import extract_ev_charging_events, extract_stadtrad_stations, extract_weather_sensors
 
 
 def fetch_and_transform_geoportal_events(
@@ -35,4 +35,12 @@ def collect_swis(bucket:str):
         bucket,
         "https://geodienste.hamburg.de/DE_HH_INSPIRE_WFS_SWIS_Sensoren?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typename=app:swis_sensoren",
         extract_weather_sensors,
+    )
+
+def collect_e_charging_stations(bucket:str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_E-Ladestationen'&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1),Sensor,ObservedProperty)",
+        extract_ev_charging_events,
+        True
     )

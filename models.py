@@ -130,3 +130,20 @@ class Parking(Location):
             .tag("lon", self.lon)
             .time(self.timestamp)
         )
+
+
+@dataclass
+class EvChargingStationEvent(Location):
+    status: str
+    address: str
+    timestamp: str
+
+    def to_point(self) -> Point:
+        return (
+            Point("ev-charging-stations")
+            .field("status", self.status)
+            .tag("address", self.address)
+            .tag("lat", self.lat)
+            .tag("lon", self.lon)
+            .time(self.timestamp)
+        )

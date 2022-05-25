@@ -8,6 +8,7 @@ import xmltodict
 from models import (
     AirQuality,
     BikeTrafficStatus,
+    EvChargingStationEvent,
     Parking,
     StadtradStation,
     TrafficStatus,
@@ -39,21 +40,12 @@ def parse_date_comma_time(date_comma_time: str) -> datetime:
     ).astimezone(GERMANY_TIMEZONE)
 
 
-@dataclass
-class EvChargingStationEvent:
-    status: str
-    address: str
-    lat: float
-    lon: float
-    timestamp: int
-
-
 def extract_ev_charging_events(json_data: str) -> List[EvChargingStationEvent]:
-    result = jmespath.search(
+    results = jmespath.search(
         "value[*].{status:Datastreams[0].Observations[0].result, lon: Locations[0].location.geometry.coordinates[0], lat: Locations[0].location.geometry.coordinates[1], address:Locations[0].description, timestamp:Datastreams[0].Observations[0].phenomenonTime}",
         json_data,
     )
-    return result  # type: ignore
+    return list(map(lambda result: EvChargingStationEvent(**result), results))  # type: ignore
 
 
 def extract_parking_usage(xml_data: str) -> List[Parking]:
@@ -192,6 +184,14 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
 
 
 def extract_traffic_status(json_data: str) -> List[TrafficStatus]:
+    results = jmespath.search(
+        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
+        json_data,
+    )
+    return list(map(lambda result: TrafficStatus(**result), results))  # type: ignore
+
+
+def extract_e_charging_stations(json_data: str) -> List[TrafficStatus]:
     results = jmespath.search(
         "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
         json_data,
