@@ -3,3 +3,4 @@ xmltodict
 influxdb-client
 python-dotenv
 requests
+dataclasses-json

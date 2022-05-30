@@ -2,7 +2,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+from dataclasses_json import dataclass_json
 from influxdb_client import Point
+
+from utils import parse_date_with_timezone_text
 
 
 @dataclass
@@ -146,4 +149,37 @@ class EvChargingStationEvent(Location):
             .tag("lat", self.lat)
             .tag("lon", self.lon)
             .time(self.timestamp)
+        )
+
+
+@dataclass_json
+@dataclass
+class AirportArrival:
+    expectedArrivalTime: str
+    plannedArrivalTime: str
+    originAirport3LCode: str
+    originAirportName: str
+    flightnumber: str
+    arrivalTerminal: str
+    airline2LCode: str
+    airlineName: str
+
+    def arrival_time(self) -> str:
+        return (
+            self.expectedArrivalTime
+            if self.expectedArrivalTime is not None
+            else self.plannedArrivalTime
+        )
+
+    def to_point(self) -> Point:
+        return (
+            Point("airport_arrivals")
+            .field("originAirportName", self.originAirportName)
+            .tag("originAirport3LCode", self.originAirport3LCode)
+            .tag("originAirportName", self.originAirportName)
+            .tag("flightnumber", self.flightnumber)
+            .tag("arrivalTerminal", self.arrivalTerminal)
+            .tag("airline2LCode", self.airline2LCode)
+            .tag("airlineName", self.airlineName)
+            .time(parse_date_with_timezone_text(self.arrival_time()))
         )

@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List
-
+from datetime import datetime
+from typing import Dict, List
 import jmespath
 import xmltodict
 
@@ -14,30 +12,7 @@ from models import (
     TrafficStatus,
     WeatherSensor,
 )
-
-GERMANY_TIMEZONE = timezone(+timedelta(hours=2))
-
-
-def parse_timestamp_like(timestamp_like: float) -> datetime:
-    return datetime.strptime(
-        str(round(float(timestamp_like), 6)), "%Y%m%d%H%M%S.%f"
-    ).astimezone(GERMANY_TIMEZONE)
-
-
-def parse_date_time(date: str, time: str) -> datetime:
-    return datetime.strptime(
-        f"{date}{time}",
-        "%Y-%m-%d%H:%M:%S",
-    ).astimezone(GERMANY_TIMEZONE)
-
-
-def parse_date_comma_time(date_comma_time: str) -> datetime:
-    print(date_comma_time)
-    date, time = date_comma_time.split(", ")
-    return datetime.strptime(
-        f"{date}-{time}",
-        "%d.%m.%Y-%H:%M",
-    ).astimezone(GERMANY_TIMEZONE)
+from utils import parse_date_comma_time, parse_date_time, parse_timestamp_like
 
 
 def extract_ev_charging_events(json_data: str) -> List[EvChargingStationEvent]:
