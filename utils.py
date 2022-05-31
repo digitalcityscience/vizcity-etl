@@ -28,7 +28,7 @@ def parse_date_comma_time(date_comma_time: str) -> datetime:
 def parse_date_with_timezone_text(date_string: str) -> datetime:
     if date_string is None:
         return datetime.fromtimestamp(0)
-    cleaned_date_string = re.split("(\[\w+\/\w+\])", date_string)
+    cleaned_date_string = re.split("(\[\w+(\/)?\w*\])", date_string)
     return datetime.strptime(
         cleaned_date_string[0],
         "%Y-%m-%dT%H:%M:%S.%f%z",

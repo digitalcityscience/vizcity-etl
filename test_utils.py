@@ -24,3 +24,8 @@ def test_parse_date_with_timezone_text():
     assert parse_date_with_timezone_text(
         "2022-05-26T15:00:00.000+02:00[Europe/Berlin]"
     ) == datetime(2022, 5, 26, 15, 0, 0).astimezone(timezone.utc)
+
+def test_parse_date_with_timezone_text_utc():
+    assert parse_date_with_timezone_text(
+        "2022-05-26T15:00:00.000+02:00[UTC]"
+    ) == datetime(2022, 5, 26, 15, 0, 0).astimezone(timezone.utc)
