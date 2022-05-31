@@ -9,6 +9,7 @@ from parse import (
     extract_stadtrad_stations,
     extract_traffic_status,
     extract_weather_sensors,
+    parse_airport_arrivals,
 )
 
 
@@ -68,3 +69,11 @@ def test_extract_traffic_status(snapshot):
     with open(fixture_file) as json_file:
         data = json.load(json_file)
         assert extract_traffic_status(data) == snapshot
+
+def test_parse_airport_arrivals(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "arrivals.json"
+    )
+    with open(fixture_file) as json_file:
+        data = json.load(json_file)
+        assert parse_airport_arrivals(data) == snapshot

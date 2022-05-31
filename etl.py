@@ -10,6 +10,7 @@ from parse import (
     extract_ev_charging_events,
     extract_stadtrad_stations,
     extract_weather_sensors,
+    parse_airport_arrivals,
 )
 
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
@@ -69,7 +70,7 @@ def collect_airport_arrivals(bucket: str):
     api_key = AIRPORT_API_KEY
     print(f"Collecting remote data from {url} ...")
     request = requests.get(url, headers={"Ocp-Apim-Subscription-Key": api_key})
-    events = list(map(lambda result: AirportArrival.from_dict(result), request.json()))
+    events = parse_airport_arrivals(request.json())
     print(events)
     events_points = [event.to_point() for event in events]
     print(

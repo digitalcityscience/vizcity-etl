@@ -5,6 +5,7 @@ import xmltodict
 
 from models import (
     AirQuality,
+    AirportArrival,
     BikeTrafficStatus,
     EvChargingStationEvent,
     Parking,
@@ -180,3 +181,7 @@ def extract_bike_traffic_status(json_data: str) -> List[TrafficStatus]:
         json_data,
     )
     return list(map(lambda result: BikeTrafficStatus(**result), results))  # type: ignore
+
+
+def parse_airport_arrivals(json_data: str) -> List[AirportArrival]:
+    return list(map(lambda result: AirportArrival.from_dict(result), json_data))
