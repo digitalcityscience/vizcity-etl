@@ -8,10 +8,11 @@ from parse import (
     extract_air_quality,
     extract_bike_traffic_status,
     extract_ev_charging_events,
+    extract_parking_usage,
     extract_stadtrad_stations,
+    extract_traffic_status,
     extract_weather_sensors,
     parse_airport_arrivals,
-    extract_traffic_status,
 )
 
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
@@ -38,6 +39,14 @@ def collect_stadtrad(bucket: str):
         bucket,
         "https://geodienste.hamburg.de/HH_WFS_Stadtrad?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typename=de.hh.up:stadtrad_stationen",
         extract_stadtrad_stations,
+    )
+
+
+def collect_parking_usage(bucket: str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://geodienste.hamburg.de/HH_WFS_Verkehr_opendata?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typename=de.hh.up:verkehr_parkhaeuser",
+        extract_parking_usage,
     )
 
 
@@ -82,6 +91,7 @@ def collect_bike_traffic_status(bucket: str):
         extract_bike_traffic_status,
         True,
     )
+
 
 def collect_airport_arrivals(bucket: str):
     url = "https://rest.api.hamburg-airport.de/v2/flights/arrivals"
