@@ -2,12 +2,10 @@ import os
 from dataclasses import dataclass
 from typing import Any, List
 
-from dotenv import load_dotenv
+
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS, Point
-from influxdb_client.domain import WritePrecision
 
-load_dotenv()
 
 INFLUX_CONFIG = {
     "url": os.getenv("INFLUX_URL"),

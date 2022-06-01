@@ -9,6 +9,7 @@ USER app
 COPY requirements.txt /home/app
 RUN pip install -r requirements.txt
 COPY .env /home/app/
+COPY .env2 /home/app/
 COPY *.py /home/app/
 
 
