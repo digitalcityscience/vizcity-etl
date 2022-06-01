@@ -1,5 +1,8 @@
+from etl import collect_air_quality
+
+
 BUCKET = "Oribos"
 
 
 def collect():
-    pass
+    collect_air_quality(BUCKET)
