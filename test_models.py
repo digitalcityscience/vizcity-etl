@@ -33,7 +33,9 @@ def test_stadtrad_station_to_point():
 
 def test_traffic_status_to_point():
     given = TrafficStatus(
-        lat=53.580056, lon=9.999282, counted_traffic=198, timestamp=datetime.now()
+        lat=53.580056, lon=9.999282, counted_traffic=198, 
+        timestamp=datetime.now(),
+        station_id="123 Test"
     )
 
     expected = (
@@ -41,6 +43,7 @@ def test_traffic_status_to_point():
         .field("counted_traffic", given.counted_traffic)
         .tag("lat", given.lat)
         .tag("lon", given.lon)
+        .tag("station_id", given.station_id)
         .time(given.timestamp)
     )
     assert expected.to_line_protocol() == given.to_point().to_line_protocol()
@@ -90,6 +93,7 @@ def test_airport_arrival_to_point():
     )
     expected = 'airport_arrivals,airline2LCode=EW,airlineName=Eurowings,arrivalTerminal=1,flightnumber=EW\ 2040,originAirport3LCode=STR,originAirportName=Stuttgart originAirportName="Stuttgart" 1653307540000000000'
     assert given.to_point().to_line_protocol() == expected
+
 
 def test_airport_arrival_to_point_without_expected_arrival_time():
     given = AirportArrival.from_dict(

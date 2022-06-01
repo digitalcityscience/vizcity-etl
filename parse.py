@@ -1,11 +1,12 @@
 from datetime import datetime
 from typing import Dict, List
+
 import jmespath
 import xmltodict
 
 from models import (
-    AirQuality,
     AirportArrival,
+    AirQuality,
     BikeTrafficStatus,
     EvChargingStationEvent,
     Parking,
@@ -18,7 +19,7 @@ from utils import parse_date_comma_time, parse_date_time, parse_timestamp_like
 
 def extract_ev_charging_events(json_data: str) -> List[EvChargingStationEvent]:
     results = jmespath.search(
-        "value[*].{status:Datastreams[0].Observations[0].result, lon: Locations[0].location.geometry.coordinates[0], lat: Locations[0].location.geometry.coordinates[1], address:Locations[0].description, timestamp:Datastreams[0].Observations[0].phenomenonTime}",
+        "value[*].{status:Datastreams[0].Observations[0].result, lon: Locations[0].location.geometry.coordinates[0], lat: Locations[0].location.geometry.coordinates[1], address:Locations[0].description, timestamp:Datastreams[0].Observations[0].phenomenonTime, station_id:properties.assetID}",
         json_data,
     )
     return list(map(lambda result: EvChargingStationEvent(**result), results))  # type: ignore
@@ -161,7 +162,7 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
 
 def extract_traffic_status(json_data: str) -> List[TrafficStatus]:
     results = jmespath.search(
-        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
+        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime, station_id:properties.assetID}",
         json_data,
     )
     return list(map(lambda result: TrafficStatus(**result), results))  # type: ignore

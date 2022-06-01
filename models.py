@@ -96,12 +96,14 @@ class TrafficStatus(Location):
     timestamp: datetime
     counted_traffic: int
     measurement_name = "kfz_verkehr"
+    station_id:str
 
     def to_point(self) -> Point:
         return (
             Point(self.measurement_name)
             .time(self.timestamp)
             .field("counted_traffic", self.counted_traffic)
+            .tag("station_id", self.station_id)
             .tag("lat", self.lat)
             .tag("lon", self.lon)
         )
@@ -140,6 +142,7 @@ class EvChargingStationEvent(Location):
     status: str
     address: str
     timestamp: str
+    station_id:str
 
     def to_point(self) -> Point:
         return (
@@ -147,6 +150,7 @@ class EvChargingStationEvent(Location):
             .field("status", self.status)
             .tag("address", self.address)
             .tag("lat", self.lat)
+            .tag("station_id", self.station_id)
             .tag("lon", self.lon)
             .time(self.timestamp)
         )
