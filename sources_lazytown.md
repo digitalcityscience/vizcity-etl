@@ -1,0 +1,2 @@
+- [Parkhäuser Hamburg](https://metaver.de/trefferanzeige?cmd=doShowDocument&docuuid=0EEE1494-36DD-410C-B5A3-7531DC457014)
+- [E-Ladestationen Hamburg](https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_E-Ladestationen'&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1;$orderby=phenomenonTime desc),Sensor,ObservedProperty))
