@@ -18,8 +18,10 @@ def collect_group1():
 def collect_group2():
     load_dotenv(".env2")
     from etl_duckville import collect as collect_duckville
+    from etl_bikini_bottom import collect as collect_bikini_bottom
 
     collect_duckville()
+    collect_bikini_bottom()
 
 
 if __name__ == "__main__":
