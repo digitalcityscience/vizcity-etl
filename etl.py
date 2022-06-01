@@ -4,13 +4,14 @@ from typing import Callable
 import requests
 
 from influxdb import write_points_to_influx
-from models import AirportArrival
 from parse import (
     extract_air_quality,
+    extract_bike_traffic_status,
     extract_ev_charging_events,
     extract_stadtrad_stations,
     extract_weather_sensors,
     parse_airport_arrivals,
+    extract_traffic_status,
 )
 
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
@@ -64,6 +65,23 @@ def collect_e_charging_stations(bucket: str):
         True,
     )
 
+
+def collect_traffic_status(bucket: str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_AutomatisierteVerkehrsmengenerfassung'  and Datastreams/properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min' &$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
+        extract_traffic_status,
+        True,
+    )
+
+
+def collect_bike_traffic_status(bucket: str):
+    fetch_and_transform_geoportal_events(
+        bucket,
+        "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_HamburgerRadzaehlnetz' and Datastreams/properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min'&$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
+        extract_bike_traffic_status,
+        True,
+    )
 
 def collect_airport_arrivals(bucket: str):
     url = "https://rest.api.hamburg-airport.de/v2/flights/arrivals"
