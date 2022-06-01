@@ -22,7 +22,6 @@ def fetch_and_transform_geoportal_events(
     bucket: str, url: str, extract_function: Callable, json=False
 ):
     try:
-        print("No group number given! Will use the default group 1")
         print(f"Collecting remote data from {url} ...")
         request = requests.get(url)
         result_xml = request.json() if json else request.text
