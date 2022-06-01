@@ -1,0 +1,3 @@
+- https://luft.hamburg.de/clp/messstationen-aktuelle-messdaten/clp1/station/64ks#station-data    
+- https://luft.hamburg.de/clp/messstationen-aktuelle-messdaten/clp1/station/17sm#station-data   
+- https://luft.hamburg.de/clp/messstationen-aktuelle-messdaten/clp1/station/70mb#station-data
