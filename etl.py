@@ -1,8 +1,7 @@
 import os
-from typing import Any, Callable, Dict, Iterable, List, Sequence, Union
+from typing import Callable, Dict, List, Sequence, Union
 
 import requests
-from influxdb_client import Point
 
 from influxdb import write_points_to_influx
 from models import Pointable
@@ -70,7 +69,7 @@ def load_events_hamburg_iot(bucket: str, events: List[Pointable]):
 
 
 def extract_transform_load_hamburg_iot(
-    bucket: str, url: str, transform_function: Callable[[str], List[Pointable]]
+    bucket: str, url: str, transform_function: Callable[[str], Sequence[Pointable]]
 ):
     try:
         results = extract_hamburg_iot_events(url)
