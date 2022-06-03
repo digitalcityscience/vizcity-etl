@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import jmespath
 import xmltodict
@@ -17,7 +17,9 @@ from models import (
 from utils import parse_date_comma_time, parse_date_time, parse_timestamp_like
 
 
-def extract_ev_charging_events(json_data: str) -> List[EvChargingStationEvent]:
+def extract_ev_charging_events(
+    json_data: Union[str, Dict]
+) -> List[EvChargingStationEvent]:
     results = jmespath.search(
         "value[*].{status:Datastreams[0].Observations[0].result, lon: Locations[0].location.geometry.coordinates[0], lat: Locations[0].location.geometry.coordinates[1], address:Locations[0].description, timestamp:Datastreams[0].Observations[0].phenomenonTime, station_id:properties.assetID}",
         json_data,

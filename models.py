@@ -1,11 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Protocol
 
 from dataclasses_json import dataclass_json
 from influxdb_client import Point
 
 from utils import parse_date_with_timezone_text
+
+
+class Pointable(Protocol):
+    def to_point(self) -> Point:
+        raise NotImplementedError
 
 
 @dataclass
@@ -57,7 +62,7 @@ class WeatherSensor:
 
 
 @dataclass
-class Location:
+class Location():
     lat: float
     lon: float
 
@@ -96,7 +101,7 @@ class TrafficStatus(Location):
     timestamp: datetime
     counted_traffic: int
     measurement_name = "kfz_verkehr"
-    station_id:str
+    station_id: str
 
     def to_point(self) -> Point:
         return (
@@ -142,7 +147,7 @@ class EvChargingStationEvent(Location):
     status: str
     address: str
     timestamp: str
-    station_id:str
+    station_id: str
 
     def to_point(self) -> Point:
         return (
