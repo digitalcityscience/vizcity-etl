@@ -113,11 +113,10 @@ def collect_swis(bucket: str):
 
 
 def collect_e_charging_stations(bucket: str):
-    fetch_and_transform_geoportal_events(
+    extract_transform_load_hamburg_iot(
         bucket,
         "https://iot.hamburg.de/v1.0/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_E-Ladestationen'&$count=true&$expand=Locations,Datastreams($expand=Observations($top=1;$orderby=phenomenonTime desc),Sensor,ObservedProperty)",
         extract_ev_charging_events,
-        True,
     )
 
 
@@ -130,11 +129,10 @@ def collect_traffic_status(bucket: str):
 
 
 def collect_bike_traffic_status(bucket: str):
-    fetch_and_transform_geoportal_events(
+    extract_transform_load_hamburg_iot(
         bucket,
         "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_HamburgerRadzaehlnetz' and Datastreams/properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min'&$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Fahrraeder_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
         extract_bike_traffic_status,
-        True,
     )
 
 
