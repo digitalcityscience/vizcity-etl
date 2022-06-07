@@ -1,10 +1,11 @@
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import Dict, Iterable, List, Union
 
 import jmespath
 import xmltodict
 
 from models import (
+    AirQualityMeasurment,
     AirportArrival,
     AirQuality,
     BikeTrafficStatus,
@@ -14,7 +15,12 @@ from models import (
     TrafficStatus,
     WeatherSensor,
 )
-from utils import parse_date_comma_time, parse_date_time, parse_timestamp_like
+from utils import (
+    parse_date_comma_time,
+    parse_date_time,
+    parse_date_time_without_seconds,
+    parse_timestamp_like,
+)
 
 
 def extract_ev_charging_events(
@@ -188,3 +194,25 @@ def extract_bike_traffic_status(json_data: str) -> List[TrafficStatus]:
 
 def parse_airport_arrivals(json_data: str) -> List[AirportArrival]:
     return list(map(lambda result: AirportArrival.from_dict(result), json_data))
+
+
+def parse_air_quality_measurments(
+    csv_data: Iterable[list[str]],
+) -> List[AirQualityMeasurment]:
+    result = []
+    station = ""
+    for idx, csv_entry in enumerate(csv_data):
+        if idx == 0:
+            station = csv_entry[1]
+        if idx > 4:
+            result.append(
+                AirQualityMeasurment(
+                    timestamp=parse_date_time_without_seconds(csv_entry[0]),
+                    street=station,
+                    no2=int(csv_entry[1] or 0),
+                    no2_4m=int(csv_entry[2] or 0),
+                    no=int(csv_entry[3] or 0),
+                    no_4m=int(csv_entry[4] or 0),
+                )
+            )
+    return result

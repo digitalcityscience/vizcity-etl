@@ -62,7 +62,7 @@ class WeatherSensor:
 
 
 @dataclass
-class Location():
+class Location:
     lat: float
     lon: float
 
@@ -192,3 +192,14 @@ class AirportArrival:
             .tag("airlineName", self.airlineName)
             .time(parse_date_with_timezone_text(self.arrival_time()))
         )
+
+
+@dataclass
+class AirQualityMeasurment:
+    street: str
+    unit = "µg/m³"
+    no: int
+    no_4m: int
+    no2: int
+    no2_4m: int
+    timestamp: datetime

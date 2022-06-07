@@ -1,6 +1,8 @@
+import csv
 import json
 import os
 from datetime import datetime
+from models import AirQualityMeasurment
 
 from parse import (
     extract_air_quality,
@@ -9,8 +11,10 @@ from parse import (
     extract_stadtrad_stations,
     extract_traffic_status,
     extract_weather_sensors,
+    parse_air_quality_measurments,
     parse_airport_arrivals,
 )
+from utils import GERMANY_TIMEZONE
 
 
 def test_extract_ev_charging_events(snapshot):
@@ -70,10 +74,29 @@ def test_extract_traffic_status(snapshot):
         data = json.load(json_file)
         assert extract_traffic_status(data) == snapshot
 
+
 def test_parse_airport_arrivals(snapshot):
-    fixture_file = os.path.join(
-        os.path.dirname(__file__), "fixtures", "arrivals.json"
-    )
+    fixture_file = os.path.join(os.path.dirname(__file__), "fixtures", "arrivals.json")
     with open(fixture_file) as json_file:
         data = json.load(json_file)
         assert parse_airport_arrivals(data) == snapshot
+
+
+def test_parse_air_quality_measurments(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "air_quality_measurments.csv"
+    )
+    with open(fixture_file) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=";")
+        result = parse_air_quality_measurments(csv_reader)
+        first_result = AirQualityMeasurment(
+            timestamp=datetime(2022, 5, 31, 10, 0).astimezone(GERMANY_TIMEZONE),
+            street="Kieler Straße",
+            no2=56,
+            no2_4m=58,
+            no=42,
+            no_4m=36,
+        )
+        assert len(result) == 168
+        assert first_result == result[0]
+        assert result == snapshot
