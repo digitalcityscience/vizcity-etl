@@ -87,8 +87,7 @@ def test_parse_air_quality_measurments(snapshot):
         os.path.dirname(__file__), "fixtures", "air_quality_measurments.csv"
     )
     with open(fixture_file) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=";")
-        result = parse_air_quality_measurments(csv_reader)
+        result = parse_air_quality_measurments(csv_file.read())
         first_result = AirQualityMeasurment(
             timestamp=datetime(2022, 5, 31, 10, 0).astimezone(GERMANY_TIMEZONE),
             street="Kieler Straße",

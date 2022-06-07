@@ -39,3 +39,7 @@ def parse_date_with_timezone_text(date_string: str) -> datetime:
         cleaned_date_string[0],
         "%Y-%m-%dT%H:%M:%S.%f%z",
     )
+
+
+def now_germany() ->datetime:
+    return datetime.now().astimezone(GERMANY_TIMEZONE)

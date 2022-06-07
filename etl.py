@@ -1,10 +1,11 @@
 import os
+from datetime import datetime, timedelta
 from typing import Callable, Dict, List, Sequence, Union
 
 import requests
 
 from influxdb import write_points_to_influx
-from models import Pointable
+from models import AirQualityMeasurmentStation, Location, Pointable
 from parse import (
     extract_air_quality,
     extract_bike_traffic_status,
@@ -13,8 +14,10 @@ from parse import (
     extract_stadtrad_stations,
     extract_traffic_status,
     extract_weather_sensors,
+    parse_air_quality_measurments,
     parse_airport_arrivals,
 )
+from utils import now_germany
 
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
 
@@ -62,7 +65,7 @@ def transform_events(
     return result
 
 
-def load_events_hamburg_iot(bucket: str, events: List[Pointable]):
+def load_events(bucket: str, events: List[Pointable]):
     events_points = [event.to_point() for event in events]
     print(f"Writing {len(events_points)} events to the timeseries db ...")
     write_points_to_influx(bucket, events_points)
@@ -75,7 +78,7 @@ def extract_transform_load_hamburg_iot(
         results = extract_hamburg_iot_events(url)
         print(f"Transforming ~{len(results)}x100 events")
         transformed_events = transform_events(results, transform_function)
-        load_events_hamburg_iot(bucket, transformed_events)
+        load_events(bucket, transformed_events)
     except Exception as e:
         print("Something went wrong while doing: extract_transform_load_hamburg_iot", e)
 
@@ -148,3 +151,40 @@ def collect_airport_arrivals(bucket: str):
         f"Writing to timeseries db {[event.to_line_protocol() for event in events_points]} ..."
     )
     write_points_to_influx(bucket, events_points)
+
+
+def collect_detailed_air_quality_hamburg(
+    bucket: str, station: AirQualityMeasurmentStation
+):
+    now = now_germany()
+    date = datetime.strftime(now, "%d.%m.%Y")
+    one_hour_ago = now - timedelta(hours=1)
+    url = f"https://hamburg.luftmessnetz.de/station/{station.station_id}.csv?group=pollution&period=1h&timespan=custom&start[date]={date}&start[hour]={one_hour_ago.hour}&end[date]={date}&end[hour]={now.hour}"
+    try:
+        print(f"Collecting remote data from {url} ...")
+        request = requests.get(url)
+        result_csv = request.text
+        print(f"Parsing events from csv...")
+        parsed_result = parse_air_quality_measurments(result_csv, station)
+        print(f"Transforming {len(parsed_result)} events")
+        load_events(bucket, parsed_result)
+    except Exception as e:
+        print(
+            "Something went wrong while doing: collect_detailed_air_quality_hamburg", e
+        )
+
+
+def collect_detailed_air_quality_hamburg_list(bucket: str) -> None:
+    stations = [
+        AirQualityMeasurmentStation(
+            station_id="64ks", location=Location(lat=562563.000, lon=5935470.000)
+        ),
+        AirQualityMeasurmentStation(
+            station_id="17sm", location=Location(lat=562563.000, lon=5935470.000)
+        ),
+        AirQualityMeasurmentStation(
+            station_id="70mb", location=Location(lat=562473.000, lon=5934507.000)
+        ),
+    ]
+    for station in stations:
+        collect_detailed_air_quality_hamburg(bucket, station)

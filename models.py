@@ -195,6 +195,12 @@ class AirportArrival:
 
 
 @dataclass
+class AirQualityMeasurmentStation:
+    station_id: str
+    location: Location
+
+
+@dataclass
 class AirQualityMeasurment:
     street: str
     unit = "µg/m³"
@@ -203,3 +209,19 @@ class AirQualityMeasurment:
     no2: int
     no2_4m: int
     timestamp: datetime
+    station: AirQualityMeasurmentStation
+
+    def to_point(self) -> Point:
+        return (
+            Point("air_quality")
+            .time(self.timestamp)
+            .field("no2", self.no2)
+            .field("no2_4m", self.no2_4m)
+            .field("no", self.no)
+            .field("no_4m", self.no_4m)
+            .tag("unit", self.unit)
+            .tag("street", self.street)
+            .tag("station_id", self.station.station_id)
+            .tag("lat", self.station.location.lat)
+            .tag("lon", self.station.location.lon)
+        )

@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 from typing import Dict, Iterable, List, Union
 
@@ -6,6 +7,7 @@ import xmltodict
 
 from models import (
     AirQualityMeasurment,
+    AirQualityMeasurmentStation,
     AirportArrival,
     AirQuality,
     BikeTrafficStatus,
@@ -197,22 +199,24 @@ def parse_airport_arrivals(json_data: str) -> List[AirportArrival]:
 
 
 def parse_air_quality_measurments(
-    csv_data: Iterable[list[str]],
+    csv_plain: str, station: AirQualityMeasurmentStation
 ) -> List[AirQualityMeasurment]:
     result = []
-    station = ""
+    csv_data = csv.reader(csv_plain.splitlines(), delimiter=";")
+    station_street = ""
     for idx, csv_entry in enumerate(csv_data):
         if idx == 0:
-            station = csv_entry[1]
+            station_street = csv_entry[1]
         if idx > 4:
             result.append(
                 AirQualityMeasurment(
                     timestamp=parse_date_time_without_seconds(csv_entry[0]),
-                    street=station,
+                    street=station_street,
                     no2=int(csv_entry[1] or 0),
                     no2_4m=int(csv_entry[2] or 0),
                     no=int(csv_entry[3] or 0),
                     no_4m=int(csv_entry[4] or 0),
+                    station=station,
                 )
             )
     return result
