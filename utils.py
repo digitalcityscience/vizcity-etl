@@ -16,6 +16,12 @@ def parse_date_time(date: str, time: str) -> datetime:
         "%Y-%m-%d%H:%M:%S",
     ).astimezone(GERMANY_TIMEZONE)
 
+def parse_date_time_without_seconds(date_time: str) -> datetime:
+    return datetime.strptime(
+        f"{date_time}",
+        "%d.%m.%Y %H:%M",
+    ).astimezone(GERMANY_TIMEZONE)
+
 
 def parse_date_comma_time(date_comma_time: str) -> datetime:
     date, time = date_comma_time.split(", ")

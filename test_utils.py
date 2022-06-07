@@ -13,6 +13,11 @@ def test_parse_date_time():
         2022, 5, 23, 16, 0, 0
     ).astimezone(timezone.utc)
 
+def test_parse_date_time_without_seconds():
+    assert parse_date_time_without_seconds("31.05.2022 10:00") == datetime(
+        2022, 5, 31, 10, 0, 0
+    ).astimezone(timezone.utc)
+
 
 def test_parse_date_comma_time():
     assert parse_date_comma_time("24.05.2022, 23:45") == datetime(
