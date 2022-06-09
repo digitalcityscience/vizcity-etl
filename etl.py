@@ -185,6 +185,9 @@ def collect_detailed_air_quality_hamburg_list(bucket: str) -> None:
         AirQualityMeasurmentStation(
             station_id="70mb", location=Location(lat=562473.000, lon=5934507.000)
         ),
+        AirQualityMeasurmentStation(
+            station_id="68hb", location=Location(lat=569743.000, lon=5938684.000)
+        ),
     ]
     for station in stations:
         collect_detailed_air_quality_hamburg(bucket, station)
