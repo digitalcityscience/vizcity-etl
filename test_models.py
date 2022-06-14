@@ -3,7 +3,7 @@ from xml.etree.ElementTree import fromstring
 
 from influxdb_client import Point
 
-from models import AirQuality, AirportArrival, StadtradStation, TrafficStatus
+from models import AirQuality, AirportArrival, StadtradStation, TrafficStatus,LocationEPSG
 
 
 def test_stadtrad_station_to_point():
@@ -15,6 +15,7 @@ def test_stadtrad_station_to_point():
         count_cargobike_electric=0,
         lat=564722.695,
         lon=5934167.221,
+        location_EPSG=LocationEPSG.from_single_line("564722.695 5934167.221"),
         timestamp=datetime.now(),
     )
     expected = (
@@ -24,6 +25,9 @@ def test_stadtrad_station_to_point():
         .field("count_bike", given.count_bike)
         .field("count_cargobike_electric", given.count_cargobike_electric)
         .field("count", given.count)
+        .field("location_EPSG", given.location_EPSG.system)
+        .field("location_EPSG_x", given.location_EPSG.x)
+        .field("location_EPSG_y", given.location_EPSG.y)
         .tag("lat", given.lat)
         .tag("lon", given.lon)
         .time(given.timestamp)
@@ -53,6 +57,7 @@ def test_air_quality_to_point():
     given = AirQuality(
         lat=562609.0,
         lon=5933343.0,
+        location_EPSG=LocationEPSG.from_single_line("562609.0 5933343.0"),
         name="Altona-Elbhang",
         station_type="Hintergrundmessstation",
         station_id="80KT",
@@ -63,7 +68,7 @@ def test_air_quality_to_point():
         pm10=1.0,
         timestamp=datetime(2022, 5, 23, 16, 0, tzinfo=timezone.utc),
     )
-    expected = "luftmessnetz_messwerte,lat=562609.0,lon=5933343.0,name=Altona-Elbhang,station_id=80KT,station_type=Hintergrundmessstation,street=Olbertsweg\,\ am\ Park lqi=1,no2=1,pm10=1,so2=1 1653321600000000000"
+    expected = "luftmessnetz_messwerte,lat=562609.0,lon=5933343.0,name=Altona-Elbhang,station_id=80KT,station_type=Hintergrundmessstation,street=Olbertsweg\,\ am\ Park location_EPSG=25832i,location_EPSG_x=562609,location_EPSG_y=5933343,lqi=1,no2=1,pm10=1,so2=1 1653321600000000000"
 
     assert datetime.fromtimestamp(1653321600, timezone.utc) == datetime(
         2022, 5, 23, 16, 0, tzinfo=timezone.utc

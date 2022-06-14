@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime
-from typing import Dict, Iterable, List, Union
-
+from typing import Dict, List, Union
 import jmespath
 import xmltodict
 
@@ -12,12 +11,14 @@ from models import (
     AirQuality,
     BikeTrafficStatus,
     EvChargingStationEvent,
+    LocationEPSG,
     Parking,
     StadtradStation,
     TrafficStatus,
     WeatherSensor,
 )
 from utils import (
+    from_epsg25832_to_gps,
     parse_date_comma_time,
     parse_date_time,
     parse_date_time_without_seconds,
@@ -53,12 +54,8 @@ def extract_parking_usage(xml_data: str) -> List[Parking]:
     )
 
     def remap_entry(xml_entry):
-        location = (
-            xml_entry.get("de.hh.up:position", {})
-            .get("gml:Point", {})
-            .get("gml:pos", "0 0")
-            .split()
-        )
+        location_epsg25832 = remap_location(xml_entry, "de.hh.up:position")
+        location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
         timestamp = (
             fallback_timestamp
             if not xml_entry.get("de.hh.up:received")
@@ -67,8 +64,9 @@ def extract_parking_usage(xml_data: str) -> List[Parking]:
         return Parking(
             name=xml_entry["de.hh.up:name"],
             utilization=xml_entry.get("de.hh.up:situation", "no_data"),
-            lat=float(location[0]),
-            lon=float(location[1]),
+            lat=location.get("lat", 0),
+            lon=location.get("lon", 0),
+            location_EPSG=location_epsg25832,
             free=int(xml_entry.get("de.hh.up:frei", 0)),
             capacity=int(xml_entry.get("de.hh.up:gesamt", 0)),
             price=xml_entry.get("de.hh.up:preise", ""),
@@ -86,16 +84,14 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
     ]
 
     def remap_entry(xml_entry) -> StadtradStation:
-        location = (
-            xml_entry.get("de.hh.up:geom", {})
-            .get("gml:Point", {})
-            .get("gml:pos", "0 0")
-            .split()
-        )
+        location_epsg25832 = remap_location(xml_entry, "de.hh.up:geom")
+        location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
+
         return StadtradStation(
             name=xml_entry["de.hh.up:name"],
-            lat=float(location[0]),
-            lon=float(location[1]),
+            lat=location.get("lat", 0),
+            lon=location.get("lon", 0),
+            location_EPSG=location_epsg25832,
             count=int(xml_entry.get("de.hh.up:anzahl_raeder", 0)),
             count_bike=int(xml_entry.get("de.hh.up:anzahl_bike", 0)),
             count_pedelec=int(xml_entry.get("de.hh.up:anzahl_pedelec", 0)),
@@ -117,30 +113,26 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
     timestamp = xml.get("wfs:FeatureCollection", {}).get("@timeStamp", datetime.now())
 
     def remap_entry(xml_entry) -> WeatherSensor:
-        location = (
-            xml_entry.get("app:geom", {})
-            .get("gml:Point", {})
-            .get("gml:pos", "0 0")
-            .split()
-        )
+        location_epsg25832 = remap_location(xml_entry, "app:geom")
+        location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
         return WeatherSensor(
             station=xml_entry["app:station"],
             street=xml_entry["app:strasse"],
             vonnullpunkt=int(xml_entry.get("app:vonnullpunkt", 0)),
             nachnullpunkt=int(xml_entry.get("app:nachnullpunkt", 0)),
-            lat=float(location[0]),
-            lon=float(location[1]),
+            lat=location.get("lat",0),
+            lon=location.get("lon",0),
+            location_EPSG=location_epsg25832,
             timestamp=timestamp,
         )
 
     return list(map(remap_entry, entries))
 
 
-def remap_location(xml_entry: Dict):
-    location = (
-        xml_entry.get("app:geom", {}).get("gml:Point", {}).get("gml:pos", "0 0").split()
+def remap_location(xml_entry: Dict, tag_name: str) -> LocationEPSG:
+    return LocationEPSG.from_single_line(
+        xml_entry.get(tag_name, {}).get("gml:Point", {}).get("gml:pos", "0 0")
     )
-    return float(location[0]), float(location[1])
 
 
 def extract_air_quality(xml_data: str) -> List[AirQuality]:
@@ -151,6 +143,9 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
     ]
 
     def remap_entry(xml_entry) -> AirQuality:
+        location_epsg25832 = remap_location(xml_entry, "app:geom")
+        location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
+
         return AirQuality(
             station_id=xml_entry["app:stationskuerzel"],
             street=xml_entry["app:adresse"],
@@ -160,8 +155,9 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             no2=float(xml_entry.get("app:NO2", 0)),
             so2=float(xml_entry.get("app:SO2", 0)),
             pm10=float(xml_entry.get("app:PM10", 0)),
-            lat=remap_location(xml_entry)[0],
-            lon=remap_location(xml_entry)[1],
+            lat=location.get("lat",0),
+            lon=location.get("lon",0),
+            location_EPSG = location_epsg25832,
             timestamp=parse_date_time(
                 date=xml_entry.get("app:datum"), time=xml_entry.get("app:messzeit")
             ),

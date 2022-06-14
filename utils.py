@@ -1,5 +1,7 @@
 import re
 from datetime import datetime, timedelta, timezone
+from functools import lru_cache
+from pyproj import Transformer
 
 GERMANY_TIMEZONE = timezone(+timedelta(hours=2))
 
@@ -15,6 +17,7 @@ def parse_date_time(date: str, time: str) -> datetime:
         f"{date}{time}",
         "%Y-%m-%d%H:%M:%S",
     ).astimezone(GERMANY_TIMEZONE)
+
 
 def parse_date_time_without_seconds(date_time: str) -> datetime:
     return datetime.strptime(
@@ -41,5 +44,14 @@ def parse_date_with_timezone_text(date_string: str) -> datetime:
     )
 
 
-def now_germany() ->datetime:
+def now_germany() -> datetime:
     return datetime.now().astimezone(GERMANY_TIMEZONE)
+
+
+TransformerFromCRS = lru_cache(Transformer.from_crs)
+
+
+def from_epsg25832_to_gps(x: float, y: float) -> dict[str,float]:
+    transformer = TransformerFromCRS("EPSG:25832", "EPSG:4326")
+    lat, lon = transformer.transform(x, y)
+    return {"lat":round(lat, 7), "lon":round(lon, 7)}

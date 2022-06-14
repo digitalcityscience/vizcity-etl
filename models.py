@@ -1,11 +1,33 @@
+from ctypes import Union
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Protocol
+from typing import Any, Protocol, Optional
 
 from dataclasses_json import dataclass_json
 from influxdb_client import Point
 
 from utils import parse_date_with_timezone_text
+
+
+@dataclass
+class LocationEPSG:
+    x: float
+    y: float
+    system: int = 25832
+
+    @classmethod
+    def from_single_line(cls, line: str = "0 0"):
+        x, y = line.split()
+        return LocationEPSG(float(x), float(y))
+
+
+def add_location_EPSG_to_point(
+    location_EPSG: Optional[LocationEPSG], point: Point
+) -> None:
+    if location_EPSG:
+        point.field("location_EPSG", location_EPSG.system)
+        point.field("location_EPSG_x", location_EPSG.x)
+        point.field("location_EPSG_y", location_EPSG.y)
 
 
 class Pointable(Protocol):
@@ -23,9 +45,10 @@ class StadtradStation:
     lat: float
     lon: float
     timestamp: datetime
+    location_EPSG: Optional[LocationEPSG]
 
     def to_point(self) -> Point:
-        return (
+        point = (
             Point("stadtrad_station")
             .tag("name", self.name)
             .field("count", self.count)
@@ -37,6 +60,10 @@ class StadtradStation:
             .time(self.timestamp)
         )
 
+        add_location_EPSG_to_point(self.location_EPSG, point)
+
+        return point
+
 
 @dataclass
 class WeatherSensor:
@@ -47,9 +74,10 @@ class WeatherSensor:
     nachnullpunkt: int
     lat: float
     lon: float
+    location_EPSG: Optional[LocationEPSG]
 
     def to_point(self) -> Point:
-        return (
+        point = (
             Point("swis_sensor")
             .tag("station", self.station)
             .tag("street", self.street)
@@ -59,6 +87,9 @@ class WeatherSensor:
             .field("vonnullpunkt", self.vonnullpunkt)
             .time(self.timestamp)
         )
+
+        add_location_EPSG_to_point(self.location_EPSG, point)
+        return point
 
 
 @dataclass
@@ -78,9 +109,10 @@ class AirQuality(Location):
     so2: float
     pm10: float
     timestamp: datetime
+    location_EPSG: Optional[LocationEPSG]
 
     def to_point(self) -> Point:
-        return (
+        point = (
             Point("luftmessnetz_messwerte")
             .tag("name", self.name)
             .tag("station_id", self.station_id)
@@ -94,6 +126,8 @@ class AirQuality(Location):
             .tag("lon", self.lon)
             .time(self.timestamp)
         )
+        add_location_EPSG_to_point(self.location_EPSG, point)
+        return point
 
 
 @dataclass
@@ -127,9 +161,10 @@ class Parking(Location):
     capacity: int
     price: str
     timestamp: Any
+    location_EPSG: Optional[LocationEPSG]
 
     def to_point(self) -> Point:
-        return (
+        point = (
             Point("parking-spaces")
             .field("free", self.free)
             .tag("name", self.name)
@@ -140,6 +175,8 @@ class Parking(Location):
             .tag("lon", self.lon)
             .time(self.timestamp)
         )
+        add_location_EPSG_to_point(self.location_EPSG, point)
+        return point
 
 
 @dataclass

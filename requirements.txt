@@ -4,3 +4,4 @@ influxdb-client
 python-dotenv
 requests
 dataclasses-json
+pyproj==3.3.1
