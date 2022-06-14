@@ -1,17 +1,30 @@
 import os
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, Dict, List, Optional
 
 
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS, Point
 
 
-INFLUX_CONFIG = {
-    "url": os.getenv("INFLUX_URL"),
-    "token": os.getenv("INFLUX_TOKEN"),
-    "org": os.getenv("INFLUX_ORG"),
+BUCKET_GROUP_LUT = {
+    "atlantis": "GROUP1",
+    "cintra": "GROUP1",
+    "gotham": "GROUP1",
+    "BikiniBottom": "GROUP2",
+    "Duckville": "GROUP2",
+    "LazyTown": "GROUP2",
+    "Oribos": "GROUP2",
+    "vizcity-master": "MASTER",
 }
+
+
+def get_current_influx_config(group_name: str = "master") -> Dict[str, Optional[str]]:
+    return {
+        "url": os.getenv("INFLUX_URL", ""),
+        "token": os.getenv(f"INFLUX_TOKEN_{group_name.upper()}"),
+        "org": os.getenv(f"INFLUX_ORG_{group_name.upper()}"),
+    }
 
 
 @dataclass
@@ -25,13 +38,15 @@ class InfluxPayload:
 
 
 def write_points_to_influx(bucket: str, points: List[Point]):
-    with InfluxDBClient(**INFLUX_CONFIG) as client:
+    group = BUCKET_GROUP_LUT.get(bucket, "")
+    with InfluxDBClient(**get_current_influx_config(group)) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket, record=points)
 
 
 def write_to_influx(payload: InfluxPayload):
-    with InfluxDBClient(**INFLUX_CONFIG) as client:
+    group = BUCKET_GROUP_LUT.get(payload.bucket, "")
+    with InfluxDBClient(**get_current_influx_config(group)) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(
             bucket=payload.bucket,
