@@ -2,7 +2,7 @@ import csv
 import json
 import os
 from datetime import datetime
-from models import AirQualityMeasurment
+from models import AirQualityMeasurment, AirQualityMeasurmentStation, Location
 
 from parse import (
     extract_air_quality,
@@ -87,7 +87,8 @@ def test_parse_air_quality_measurments(snapshot):
         os.path.dirname(__file__), "fixtures", "air_quality_measurments.csv"
     )
     with open(fixture_file) as csv_file:
-        result = parse_air_quality_measurments(csv_file.read())
+        station = AirQualityMeasurmentStation("testId",Location(0,0))
+        result = parse_air_quality_measurments(csv_file.read(),station)
         first_result = AirQualityMeasurment(
             timestamp=datetime(2022, 5, 31, 10, 0).astimezone(GERMANY_TIMEZONE),
             street="Kieler Straße",
@@ -95,6 +96,7 @@ def test_parse_air_quality_measurments(snapshot):
             no2_4m=58,
             no=42,
             no_4m=36,
+            station=station
         )
         assert len(result) == 168
         assert first_result == result[0]
