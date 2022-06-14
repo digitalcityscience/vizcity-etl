@@ -6,6 +6,7 @@ from models import AirQualityMeasurment, AirQualityMeasurmentStation, Location
 
 from parse import (
     extract_air_quality,
+    extract_bike_traffic_status,
     extract_ev_charging_events,
     extract_parking_usage,
     extract_stadtrad_stations,
@@ -80,6 +81,12 @@ def test_parse_airport_arrivals(snapshot):
     with open(fixture_file) as json_file:
         data = json.load(json_file)
         assert parse_airport_arrivals(data) == snapshot
+
+def test_extract_bike_traffic_status(snapshot):
+    fixture_file = os.path.join(os.path.dirname(__file__), "fixtures", "HH_STA_HamburgerRadzaehlnetz.json")
+    with open(fixture_file) as json_file:
+        data = json.load(json_file)
+        assert extract_bike_traffic_status(data) == snapshot
 
 
 def test_parse_air_quality_measurments(snapshot):

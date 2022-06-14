@@ -184,7 +184,7 @@ def extract_e_charging_stations(json_data: str) -> List[TrafficStatus]:
 
 def extract_bike_traffic_status(json_data: str) -> List[TrafficStatus]:
     results = jmespath.search(
-        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
+        "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime, station_id:name}",
         json_data,
     )
     return list(map(lambda result: BikeTrafficStatus(**result), results))  # type: ignore
