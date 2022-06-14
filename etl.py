@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import cache
 import os
 from datetime import datetime, timedelta
 from typing import Callable, Collection, Dict, List, Sequence, Union
@@ -23,7 +23,7 @@ from utils import now_germany
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
 
 
-@lru_cache
+@cache
 def get_remote_events(url: str, json=True, headers: tuple = ()):
     print(f"Collecting remote data from {url} ...")
     headers_dict = dict([headers]) if headers else {}
