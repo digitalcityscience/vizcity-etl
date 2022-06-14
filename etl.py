@@ -1,6 +1,7 @@
+from functools import lru_cache
 import os
 from datetime import datetime, timedelta
-from typing import Callable, Dict, List, Sequence, Union
+from typing import Callable, Collection, Dict, List, Sequence, Union
 
 import requests
 
@@ -22,21 +23,22 @@ from utils import now_germany
 AIRPORT_API_KEY = os.getenv("AIRPORT_API_KEY", "NO_KEY_PROVIDED")
 
 
+@lru_cache
+def get_remote_events(url: str, json=True, headers: tuple = ()):
+    print(f"Collecting remote data from {url} ...")
+    headers_dict = dict([headers]) if headers else {}
+    request = requests.get(url, headers=headers_dict)
+    return request.json() if json else request.text
+
+
 def extract_transform_load_hamburg_geodienste(
     bucket: str, url: str, extract_function: Callable
 ):
     try:
-        print(f"Collecting remote data from {url} ...")
-        request = requests.get(url)
-        result_xml = request.text
-        print(f"Parsing events {result_xml} ...")
+        result_xml = get_remote_events(url, json=False)
+        print(f"Parsing events ...")
         events = extract_function(result_xml)
-        print(events)
-        events_points = [event.to_point() for event in events]
-        print(
-            f"Writing to timeseries db {[event.to_line_protocol() for event in events_points]} ..."
-        )
-        write_points_to_influx(bucket, events_points)
+        load_events(bucket,events)
     except Exception as e:
         print(
             "Something went wrong while doing: fetch_and_transform_geoportal_events", e
@@ -45,8 +47,7 @@ def extract_transform_load_hamburg_geodienste(
 
 def extract_hamburg_iot_events(url: str, acc_events=[]) -> List[Union[str, Dict]]:
     print(f"Collecting remote data from {url} ...")
-    request = requests.get(url)
-    result_json = request.json()
+    result_json: Dict = get_remote_events(url, json=True)  # type: ignore
     next_page = result_json.get("@iot.nextLink")
     print(f"Found next-page? {next_page is not None}")
     result = [*acc_events, result_json]
@@ -65,7 +66,7 @@ def transform_events(
     return result
 
 
-def load_events(bucket: str, events: List[Pointable]):
+def load_events(bucket: str, events: Collection[Pointable]):
     events_points = [event.to_point() for event in events]
     print(f"Writing {len(events_points)} events to the timeseries db ...")
     write_points_to_influx(bucket, events_points)
@@ -142,15 +143,11 @@ def collect_bike_traffic_status(bucket: str):
 def collect_airport_arrivals(bucket: str):
     url = "https://rest.api.hamburg-airport.de/v2/flights/arrivals"
     api_key = AIRPORT_API_KEY
-    print(f"Collecting remote data from {url} ...")
-    request = requests.get(url, headers={"Ocp-Apim-Subscription-Key": api_key})
-    events = parse_airport_arrivals(request.json())
-    print(events)
-    events_points = [event.to_point() for event in events]
-    print(
-        f"Writing to timeseries db {[event.to_line_protocol() for event in events_points]} ..."
+    request_json = get_remote_events(
+        url, json=True, headers=("Ocp-Apim-Subscription-Key", api_key)
     )
-    write_points_to_influx(bucket, events_points)
+    events = parse_airport_arrivals(request_json)
+    load_events(bucket, events)
 
 
 def collect_detailed_air_quality_hamburg(
@@ -162,8 +159,7 @@ def collect_detailed_air_quality_hamburg(
     url = f"https://hamburg.luftmessnetz.de/station/{station.station_id}.csv?group=pollution&period=1h&timespan=custom&start[date]={date}&start[hour]={one_hour_ago.hour}&end[date]={date}&end[hour]={now.hour}"
     try:
         print(f"Collecting remote data from {url} ...")
-        request = requests.get(url)
-        result_csv = request.text
+        result_csv = get_remote_events(url, json=False)
         print(f"Parsing events from csv...")
         parsed_result = parse_air_quality_measurments(result_csv, station)
         print(f"Transforming {len(parsed_result)} events")
