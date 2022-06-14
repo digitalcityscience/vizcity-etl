@@ -9,6 +9,7 @@ def collect_group1():
     from etl_cintra import collect as collect_cintra
     from etl_gotham import collect as collect_gotham
 
+    print("Collecting events for GROUP1")
     collect_atlantis()
     collect_cintra()
     collect_gotham()
@@ -20,6 +21,7 @@ def collect_group2():
     from etl_lazytown import collect as collect_lazytown
     from etl_oribos import collect as collect_oribos
 
+    print("Collecting events for GROUP2")
     collect_duckville()
     collect_bikini_bottom()
     collect_lazytown()
@@ -29,6 +31,7 @@ def collect_group2():
 def collect_master():
     from etl_master import collect as collect_master
 
+    print("Collecting events for master")
     collect_master()
 
 
