@@ -1,5 +1,8 @@
+from etl import collect_stadtrad, collect_swis
+
 BUCKET = "BikiniBottom"
 
 
 def collect():
-    pass
+    collect_stadtrad(BUCKET)
+    collect_swis(BUCKET)
