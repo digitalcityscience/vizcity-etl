@@ -1,7 +1,6 @@
-import csv
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from models import (
     AirQualityMeasurment,
     AirQualityMeasurmentStation,
@@ -129,6 +128,7 @@ def test_parse_weather_event():
             precipitation=11,
             temperature=23,
             wind_speed=13,
-            timestamp="Wednesday 3: 00 PM",
+            timestamp=datetime(2022, 6, 22, 15, 0, 0).astimezone(timezone.utc),
+            region="Finkenwerder, Hamburg, Germany"
         )
         assert given == expected

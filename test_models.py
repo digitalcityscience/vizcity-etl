@@ -135,7 +135,7 @@ def test_airport_arrival_to_point_without_expected_arrival_time():
 
 def test_weather_condition_to_point():
     given = WeatherConditions(
-        comment="Sunny", precipitation=11, temperature=23, wind_speed=13, timestamp=datetime.now()
+        comment="Sunny", precipitation=11, temperature=23, wind_speed=13, timestamp=datetime.now(), region="Hamburg"
     )
 
     expected = (
@@ -143,6 +143,7 @@ def test_weather_condition_to_point():
         .field("temperature", given.temperature)
         .tag("precipitation", given.precipitation)
         .tag("wind_speed", given.wind_speed)
+        .tag("region", given.region)
         .tag("comment", given.comment)
         .time(given.timestamp)
     )

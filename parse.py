@@ -223,10 +223,12 @@ def parse_air_quality_measurments(
 
 def parse_weather_event(json_data: Dict) -> WeatherConditions:
     currentConditions = json_data.get("currentConditions", {})
+    region = json_data.get("region", "")
     return WeatherConditions(
         comment=currentConditions.get("comment", "No data"),
         precipitation=float(currentConditions.get("precip", "0%").replace("%", "")),
         temperature=currentConditions.get("temp", {}).get("c", 0),
         wind_speed=currentConditions.get("wind", {}).get("km", 0),
         timestamp=parse_day_time_relative(currentConditions.get("dayhour", "")),
+        region=region
     )

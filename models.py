@@ -271,6 +271,7 @@ class WeatherConditions:
     wind_speed: float
     comment: str
     timestamp: datetime
+    region: str
 
 
     def to_point(self) -> Point:
@@ -279,6 +280,7 @@ class WeatherConditions:
             .field("temperature", self.temperature)
             .tag("precipitation", self.precipitation)
             .tag("wind_speed", self.wind_speed)
+            .tag("region", self.region)
             .tag("comment", self.comment)
             .time(self.timestamp)
         )
