@@ -40,7 +40,6 @@ class InfluxPayload:
 
 def write_points_to_influx(bucket: str, points: List[Point]):
     group = BUCKET_GROUP_LUT.get(bucket, "")
-    print(points)
     with InfluxDBClient(**get_current_influx_config(group)) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket, record=points)
