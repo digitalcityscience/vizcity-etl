@@ -3,7 +3,14 @@ from xml.etree.ElementTree import fromstring
 
 from influxdb_client import Point
 
-from models import AirQuality, AirportArrival, StadtradStation, TrafficStatus,LocationEPSG
+from models import (
+    AirQuality,
+    AirportArrival,
+    StadtradStation,
+    TrafficStatus,
+    LocationEPSG,
+    WeatherConditions,
+)
 
 
 def test_stadtrad_station_to_point():
@@ -37,9 +44,11 @@ def test_stadtrad_station_to_point():
 
 def test_traffic_status_to_point():
     given = TrafficStatus(
-        lat=53.580056, lon=9.999282, counted_traffic=198, 
+        lat=53.580056,
+        lon=9.999282,
+        counted_traffic=198,
         timestamp=datetime.now(),
-        station_id="123 Test"
+        station_id="123 Test",
     )
 
     expected = (
@@ -122,3 +131,19 @@ def test_airport_arrival_to_point_without_expected_arrival_time():
     )
     expected = 'airport_arrivals,airline2LCode=EW,airlineName=Eurowings,arrivalTerminal=1,flightnumber=EW\ 2040,originAirport3LCode=STR,originAirportName=Stuttgart originAirportName="Stuttgart" 1653303600000000000'
     assert given.to_point().to_line_protocol() == expected
+
+
+def test_weather_condition_to_point():
+    given = WeatherConditions(
+        comment="Sunny", precipitation=11, temperature=23, wind_speed=13, timestamp=datetime.now()
+    )
+
+    expected = (
+        Point("weather")
+        .field("temperature", given.temperature)
+        .tag("precipitation", given.precipitation)
+        .tag("wind_speed", given.wind_speed)
+        .tag("comment", given.comment)
+        .time(given.timestamp)
+    )
+    assert expected.to_line_protocol() == given.to_point().to_line_protocol()

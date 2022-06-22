@@ -1,20 +1,22 @@
 import csv
 from datetime import datetime
 from typing import Dict, List, Union
+
 import jmespath
 import xmltodict
 
 from models import (
-    AirQualityMeasurment,
-    AirQualityMeasurmentStation,
     AirportArrival,
     AirQuality,
+    AirQualityMeasurment,
+    AirQualityMeasurmentStation,
     BikeTrafficStatus,
     EvChargingStationEvent,
     LocationEPSG,
     Parking,
     StadtradStation,
     TrafficStatus,
+    WeatherConditions,
     WeatherSensor,
 )
 from utils import (
@@ -22,6 +24,7 @@ from utils import (
     parse_date_comma_time,
     parse_date_time,
     parse_date_time_without_seconds,
+    parse_day_time_relative,
     parse_timestamp_like,
 )
 
@@ -120,8 +123,8 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
             street=xml_entry["app:strasse"],
             vonnullpunkt=int(xml_entry.get("app:vonnullpunkt", 0)),
             nachnullpunkt=int(xml_entry.get("app:nachnullpunkt", 0)),
-            lat=location.get("lat",0),
-            lon=location.get("lon",0),
+            lat=location.get("lat", 0),
+            lon=location.get("lon", 0),
             location_EPSG=location_epsg25832,
             timestamp=timestamp,
         )
@@ -155,9 +158,9 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             no2=float(xml_entry.get("app:NO2", 0)),
             so2=float(xml_entry.get("app:SO2", 0)),
             pm10=float(xml_entry.get("app:PM10", 0)),
-            lat=location.get("lat",0),
-            lon=location.get("lon",0),
-            location_EPSG = location_epsg25832,
+            lat=location.get("lat", 0),
+            lon=location.get("lon", 0),
+            location_EPSG=location_epsg25832,
             timestamp=parse_date_time(
                 date=xml_entry.get("app:datum"), time=xml_entry.get("app:messzeit")
             ),
@@ -216,3 +219,14 @@ def parse_air_quality_measurments(
                 )
             )
     return result
+
+
+def parse_weather_event(json_data: Dict) -> WeatherConditions:
+    currentConditions = json_data.get("currentConditions", {})
+    return WeatherConditions(
+        comment=currentConditions.get("comment", "No data"),
+        precipitation=float(currentConditions.get("precip", "0%").replace("%", "")),
+        temperature=currentConditions.get("temp", {}).get("c", 0),
+        wind_speed=currentConditions.get("wind", {}).get("km", 0),
+        timestamp=parse_day_time_relative(currentConditions.get("dayhour", "")),
+    )

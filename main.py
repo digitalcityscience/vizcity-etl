@@ -7,12 +7,14 @@ def collect_group1():
 
     from etl_atlantis import collect as collect_atlantis
     from etl_cintra import collect as collect_cintra
-    from etl_gotham import collect as collect_gotham
+    from etl_gotham import collect as collect_gotham    
+    from etl_mordor import collect as collect_mordor
 
     print("Collecting events for GROUP1")
     collect_atlantis()
     collect_cintra()
     collect_gotham()
+    collect_mordor()
 
 
 def collect_group2():

@@ -9,6 +9,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS, Point
 
 BUCKET_GROUP_LUT = {
     "atlantis": "GROUP1",
+    "mordor": "GROUP1",
     "cintra": "GROUP1",
     "gotham": "GROUP1",
     "BikiniBottom": "GROUP2",
@@ -39,6 +40,7 @@ class InfluxPayload:
 
 def write_points_to_influx(bucket: str, points: List[Point]):
     group = BUCKET_GROUP_LUT.get(bucket, "")
+    print(points)
     with InfluxDBClient(**get_current_influx_config(group)) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
         write_api.write(bucket, record=points)

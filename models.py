@@ -262,3 +262,23 @@ class AirQualityMeasurment:
             .tag("lat", self.station.location.lat)
             .tag("lon", self.station.location.lon)
         )
+
+
+@dataclass
+class WeatherConditions:
+    temperature: float
+    precipitation: float
+    wind_speed: float
+    comment: str
+    timestamp: datetime
+
+
+    def to_point(self) -> Point:
+        return (
+            Point("weather")
+            .field("temperature", self.temperature)
+            .tag("precipitation", self.precipitation)
+            .tag("wind_speed", self.wind_speed)
+            .tag("comment", self.comment)
+            .time(self.timestamp)
+        )

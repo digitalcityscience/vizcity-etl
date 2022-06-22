@@ -2,7 +2,12 @@ import csv
 import json
 import os
 from datetime import datetime
-from models import AirQualityMeasurment, AirQualityMeasurmentStation, Location
+from models import (
+    AirQualityMeasurment,
+    AirQualityMeasurmentStation,
+    Location,
+    WeatherConditions,
+)
 
 from parse import (
     extract_air_quality,
@@ -11,6 +16,7 @@ from parse import (
     extract_parking_usage,
     extract_stadtrad_stations,
     extract_traffic_status,
+    parse_weather_event,
     extract_weather_sensors,
     parse_air_quality_measurments,
     parse_airport_arrivals,
@@ -82,8 +88,11 @@ def test_parse_airport_arrivals(snapshot):
         data = json.load(json_file)
         assert parse_airport_arrivals(data) == snapshot
 
+
 def test_extract_bike_traffic_status(snapshot):
-    fixture_file = os.path.join(os.path.dirname(__file__), "fixtures", "HH_STA_HamburgerRadzaehlnetz.json")
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "HH_STA_HamburgerRadzaehlnetz.json"
+    )
     with open(fixture_file) as json_file:
         data = json.load(json_file)
         assert extract_bike_traffic_status(data) == snapshot
@@ -94,8 +103,8 @@ def test_parse_air_quality_measurments(snapshot):
         os.path.dirname(__file__), "fixtures", "air_quality_measurments.csv"
     )
     with open(fixture_file) as csv_file:
-        station = AirQualityMeasurmentStation("testId",Location(0,0))
-        result = parse_air_quality_measurments(csv_file.read(),station)
+        station = AirQualityMeasurmentStation("testId", Location(0, 0))
+        result = parse_air_quality_measurments(csv_file.read(), station)
         first_result = AirQualityMeasurment(
             timestamp=datetime(2022, 5, 31, 10, 0).astimezone(GERMANY_TIMEZONE),
             street="Kieler Straße",
@@ -103,8 +112,23 @@ def test_parse_air_quality_measurments(snapshot):
             no2_4m=58,
             no=42,
             no_4m=36,
-            station=station
+            station=station,
         )
         assert len(result) == 168
         assert first_result == result[0]
         assert result == snapshot
+
+
+def test_parse_weather_event():
+    fixture_file = os.path.join(os.path.dirname(__file__), "fixtures", "weather.json")
+    with open(fixture_file) as json_file:
+        data = json.load(json_file)
+        given = parse_weather_event(data)
+        expected = WeatherConditions(
+            comment="Sunny",
+            precipitation=11,
+            temperature=23,
+            wind_speed=13,
+            timestamp="Wednesday 3: 00 PM",
+        )
+        assert given == expected

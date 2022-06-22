@@ -38,3 +38,7 @@ def test_parse_date_with_timezone_text_utc():
 
 def test_reproject_epsg25832_location():
     assert from_epsg25832_to_gps(x=562609.000, y=5933343.000) == { "lat":53.5452487, "lon":9.9448849 }
+
+
+def test_parse_day_time_relative():
+    assert parse_day_time_relative("Wednesday 3:00 PM") == datetime(2022, 6, 22, 15, 0, 0).astimezone(timezone.utc)

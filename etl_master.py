@@ -8,6 +8,7 @@ from etl import (
     collect_stadtrad,
     collect_swis,
     collect_traffic_status,
+    collect_weather,
 )
 
 BUCKET = "vizcity-master"
@@ -23,3 +24,4 @@ def collect():
     collect_detailed_air_quality_hamburg_list(BUCKET)
     collect_air_quality(BUCKET)
     collect_traffic_status(BUCKET)
+    collect_weather(53.535058, 9.876773, BUCKET)

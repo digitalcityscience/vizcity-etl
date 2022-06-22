@@ -17,6 +17,7 @@ from parse import (
     extract_weather_sensors,
     parse_air_quality_measurments,
     parse_airport_arrivals,
+    parse_weather_event,
 )
 from utils import now_germany
 
@@ -187,3 +188,15 @@ def collect_detailed_air_quality_hamburg_list(bucket: str) -> None:
     ]
     for station in stations:
         collect_detailed_air_quality_hamburg(bucket, station)
+
+
+def collect_weather(lat:float, lon:float, bucket:str):
+    try:
+        events_json = get_remote_events(f"https://weatherdbi.herokuapp.com/data/weather/{lat},{lon}")
+        event = parse_weather_event(events_json)  # type: ignore
+        print(event.to_point().to_line_protocol())
+        load_events(bucket, [event])
+    except Exception as e:
+        print(
+            "Something went wrong while doing: collect_weather", e
+        )

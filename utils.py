@@ -18,6 +18,14 @@ def parse_date_time(date: str, time: str) -> datetime:
         "%Y-%m-%d%H:%M:%S",
     ).astimezone(GERMANY_TIMEZONE)
 
+def parse_day_time_relative(day_time) -> datetime:
+    now = datetime.now().astimezone(GERMANY_TIMEZONE)
+    year_month_day = now.strftime("%Y-%m-%d")
+    return datetime.strptime(
+        f"{year_month_day} {day_time}",
+        "%Y-%m-%d %A %I:%M %p",
+    ).astimezone(GERMANY_TIMEZONE)
+
 
 def parse_date_time_without_seconds(date_time: str) -> datetime:
     return datetime.strptime(
