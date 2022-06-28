@@ -265,14 +265,23 @@ class AirQualityMeasurment:
 
 
 @dataclass
+class DWDWeatherStation:
+    # https://www.dwd.de/DE/leistungen/met_verfahren_mosmix/mosmix_stationskatalog.cfg?view=nasPublication&nn=16102
+    location: Location
+    id: str
+    name: str
+    elevation: int
+
+
+@dataclass
 class WeatherConditions:
     temperature: float
     precipitation: float
     wind_speed: float
-    comment: str
-    timestamp: datetime
-    region: str
-
+    timestamp: float
+    station: DWDWeatherStation
+    humidity: int
+    pressure: int
 
     def to_point(self) -> Point:
         return (
@@ -280,7 +289,12 @@ class WeatherConditions:
             .field("temperature", self.temperature)
             .tag("precipitation", self.precipitation)
             .tag("wind_speed", self.wind_speed)
-            .tag("region", self.region)
-            .tag("comment", self.comment)
+            .tag("humidity", self.humidity)
+            .tag("pressure", self.pressure)
+            .tag("region", self.station.name)
+            .tag("station_elevation", self.station.elevation)
+            .tag("station_id", self.station.id)
+            .tag("lat",self.station.location.lat)
+            .tag("lon",self.station.location.lon)
             .time(self.timestamp)
         )

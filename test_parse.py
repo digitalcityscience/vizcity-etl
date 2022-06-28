@@ -1,13 +1,14 @@
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime
+
 from models import (
     AirQualityMeasurment,
     AirQualityMeasurmentStation,
+    DWDWeatherStation,
     Location,
     WeatherConditions,
 )
-
 from parse import (
     extract_air_quality,
     extract_bike_traffic_status,
@@ -15,10 +16,10 @@ from parse import (
     extract_parking_usage,
     extract_stadtrad_stations,
     extract_traffic_status,
-    parse_weather_event,
     extract_weather_sensors,
     parse_air_quality_measurments,
     parse_airport_arrivals,
+    parse_dwd_weather_event,
 )
 from utils import GERMANY_TIMEZONE
 
@@ -118,17 +119,26 @@ def test_parse_air_quality_measurments(snapshot):
         assert result == snapshot
 
 
-def test_parse_weather_event():
-    fixture_file = os.path.join(os.path.dirname(__file__), "fixtures", "weather.json")
+def test_parse_dwd_weather_event():
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "dwd_weather.json"
+    )
     with open(fixture_file) as json_file:
         data = json.load(json_file)
-        given = parse_weather_event(data)
+        station = DWDWeatherStation(
+            location=Location(lat=53.38, lon=10.00),
+            id="10147",
+            name="HAMBURG-FU",
+            elevation=16,
+        )
+        given = parse_dwd_weather_event(data, station)
         expected = WeatherConditions(
-            comment="Sunny",
-            precipitation=11,
-            temperature=23,
-            wind_speed=13,
-            timestamp=datetime(2022, 6, 22, 15, 0, 0).astimezone(timezone.utc),
-            region="Finkenwerder, Hamburg, Germany"
+            precipitation=0,
+            temperature=190,
+            wind_speed=160,
+            timestamp=1656342000000,
+            humidity=870,
+            pressure=10149,
+            station=station,
         )
         assert given == expected

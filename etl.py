@@ -6,7 +6,7 @@ from typing import Callable, Collection, Dict, List, Sequence, Union
 import requests
 
 from influxdb import write_points_to_influx
-from models import AirQualityMeasurmentStation, Location, Pointable
+from models import AirQualityMeasurmentStation, DWDWeatherStation, Location, Pointable
 from parse import (
     extract_air_quality,
     extract_bike_traffic_status,
@@ -17,7 +17,7 @@ from parse import (
     extract_weather_sensors,
     parse_air_quality_measurments,
     parse_airport_arrivals,
-    parse_weather_event,
+    parse_dwd_weather_event,
 )
 from utils import now_germany
 
@@ -39,7 +39,7 @@ def extract_transform_load_hamburg_geodienste(
         result_xml = get_remote_events(url, json=False)
         print(f"Parsing events ...")
         events = extract_function(result_xml)
-        load_events(bucket,events)
+        load_events(bucket, events)
     except Exception as e:
         print(
             "Something went wrong while doing: fetch_and_transform_geoportal_events", e
@@ -190,13 +190,13 @@ def collect_detailed_air_quality_hamburg_list(bucket: str) -> None:
         collect_detailed_air_quality_hamburg(bucket, station)
 
 
-def collect_weather(lat:float, lon:float, bucket:str):
+def collect_weather_dwd(station: DWDWeatherStation, bucket: str):
     try:
-        events_json = get_remote_events(f"https://weatherdbi.herokuapp.com/data/weather/{lat},{lon}")
-        event = parse_weather_event(events_json)  # type: ignore
+        events_json = get_remote_events(
+            f"https://s3.eu-central-1.amazonaws.com/app-prod-static.warnwetter.de/v16/current_measurement_{station.id}.json"
+        )
+        event = parse_dwd_weather_event(events_json, station)  # type: ignore
         print(event.to_point().to_line_protocol())
         load_events(bucket, [event])
     except Exception as e:
-        print(
-            "Something went wrong while doing: collect_weather", e
-        )
+        print("Something went wrong while doing: collect_weather_dwd", e)

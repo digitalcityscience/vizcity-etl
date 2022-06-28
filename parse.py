@@ -11,6 +11,7 @@ from models import (
     AirQualityMeasurment,
     AirQualityMeasurmentStation,
     BikeTrafficStatus,
+    DWDWeatherStation,
     EvChargingStationEvent,
     LocationEPSG,
     Parking,
@@ -221,14 +222,14 @@ def parse_air_quality_measurments(
     return result
 
 
-def parse_weather_event(json_data: Dict) -> WeatherConditions:
-    currentConditions = json_data.get("currentConditions", {})
-    region = json_data.get("region", "")
+def parse_dwd_weather_event(
+    current_measurements: Dict, station: DWDWeatherStation
+) -> WeatherConditions:
     return WeatherConditions(
-        comment=currentConditions.get("comment", "No data"),
-        precipitation=float(currentConditions.get("precip", "0%").replace("%", "")),
-        temperature=currentConditions.get("temp", {}).get("c", 0),
-        wind_speed=currentConditions.get("wind", {}).get("km", 0),
-        timestamp=parse_day_time_relative(currentConditions.get("dayhour", "")),
-        region=region
+        precipitation=float(current_measurements.get("precipitation", "0")),
+        temperature=current_measurements.get("temperature", 0),        pressure=current_measurements.get("pressure", 0),
+        wind_speed=current_measurements.get("meanwind", 0),
+        timestamp=current_measurements.get("time", datetime.now()),
+        humidity=current_measurements.get("humidity", 0),
+        station=station,
     )

@@ -1,11 +1,12 @@
-from datetime import date, datetime, timezone
-from xml.etree.ElementTree import fromstring
+from datetime import datetime, timezone
 
 from influxdb_client import Point
 
 from models import (
     AirQuality,
     AirportArrival,
+    DWDWeatherStation,
+    Location,
     StadtradStation,
     TrafficStatus,
     LocationEPSG,
@@ -135,7 +136,18 @@ def test_airport_arrival_to_point_without_expected_arrival_time():
 
 def test_weather_condition_to_point():
     given = WeatherConditions(
-        comment="Sunny", precipitation=11, temperature=23, wind_speed=13, timestamp=datetime.now(), region="Hamburg"
+        precipitation=11,
+        temperature=23,
+        pressure=10149,
+        wind_speed=13,
+        timestamp=datetime.now().timestamp(),
+        humidity=22,
+        station=DWDWeatherStation(
+            location=Location(lat=53.38, lon=10.00),
+            id="10147",
+            name="HAMBURG-FU",
+            elevation=16,
+        ),
     )
 
     expected = (
@@ -143,8 +155,12 @@ def test_weather_condition_to_point():
         .field("temperature", given.temperature)
         .tag("precipitation", given.precipitation)
         .tag("wind_speed", given.wind_speed)
-        .tag("region", given.region)
-        .tag("comment", given.comment)
+        .tag("region", given.station.name)
+        .tag("station_id", given.station.id)
+        .tag("station_elevation", given.station.elevation)
+        .tag("lat", given.station.location.lat)
+        .tag("lon", given.station.location.lon)
+        .tag("humidity", given.humidity)
         .time(given.timestamp)
     )
     assert expected.to_line_protocol() == given.to_point().to_line_protocol()
