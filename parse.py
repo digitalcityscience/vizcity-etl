@@ -22,10 +22,10 @@ from models import (
 )
 from utils import (
     from_epsg25832_to_gps,
+    from_millisecond_timestamp,
     parse_date_comma_time,
     parse_date_time,
     parse_date_time_without_seconds,
-    parse_day_time_relative,
     parse_timestamp_like,
 )
 
@@ -229,7 +229,7 @@ def parse_dwd_weather_event(
         precipitation=float(current_measurements.get("precipitation", "0")),
         temperature=current_measurements.get("temperature", 0),        pressure=current_measurements.get("pressure", 0),
         wind_speed=current_measurements.get("meanwind", 0),
-        timestamp=current_measurements.get("time", datetime.now()),
+        timestamp=from_millisecond_timestamp(current_measurements.get("time", datetime.now().timestamp())),
         humidity=current_measurements.get("humidity", 0),
         station=station,
     )

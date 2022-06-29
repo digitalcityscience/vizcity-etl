@@ -63,3 +63,11 @@ def from_epsg25832_to_gps(x: float, y: float) -> dict[str,float]:
     transformer = TransformerFromCRS("EPSG:25832", "EPSG:4326")
     lat, lon = transformer.transform(x, y)
     return {"lat":round(lat, 7), "lon":round(lon, 7)}
+
+
+def from_millisecond_timestamp(ts:float) -> datetime:
+    try:
+        result = datetime.fromtimestamp(ts)
+    except ValueError:
+        return from_millisecond_timestamp(ts / 1000)
+    return result.astimezone(GERMANY_TIMEZONE)

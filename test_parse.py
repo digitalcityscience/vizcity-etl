@@ -136,7 +136,7 @@ def test_parse_dwd_weather_event():
             precipitation=0,
             temperature=190,
             wind_speed=160,
-            timestamp=1656342000000,
+            timestamp=datetime(year=2022, month=6, day=27, hour=17).astimezone(GERMANY_TIMEZONE),
             humidity=870,
             pressure=10149,
             station=station,

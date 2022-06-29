@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+
 from utils import *
 
 
@@ -12,6 +13,7 @@ def test_parse_date_time():
     assert parse_date_time("2022-05-23", "16:00:00") == datetime(
         2022, 5, 23, 16, 0, 0
     ).astimezone(timezone.utc)
+
 
 def test_parse_date_time_without_seconds():
     assert parse_date_time_without_seconds("31.05.2022 10:00") == datetime(
@@ -30,6 +32,7 @@ def test_parse_date_with_timezone_text():
         "2022-05-26T15:00:00.000+02:00[Europe/Berlin]"
     ) == datetime(2022, 5, 26, 15, 0, 0).astimezone(timezone.utc)
 
+
 def test_parse_date_with_timezone_text_utc():
     assert parse_date_with_timezone_text(
         "2022-05-26T15:00:00.000+02:00[UTC]"
@@ -37,8 +40,17 @@ def test_parse_date_with_timezone_text_utc():
 
 
 def test_reproject_epsg25832_location():
-    assert from_epsg25832_to_gps(x=562609.000, y=5933343.000) == { "lat":53.5452487, "lon":9.9448849 }
+    assert from_epsg25832_to_gps(x=562609.000, y=5933343.000) == {
+        "lat": 53.5452487,
+        "lon": 9.9448849,
+    }
 
 
 def test_parse_day_time_relative():
-    assert parse_day_time_relative("Wednesday 3:00 PM") == datetime(2022, 6, 22, 15, 0, 0).astimezone(timezone.utc)
+    assert parse_day_time_relative("Wednesday 3:00 PM") == datetime.now().replace(
+        hour=15, minute=0, second=0, microsecond=0
+    ).astimezone(GERMANY_TIMEZONE)
+
+
+def test_from_millisecond_timestamp():
+    assert from_millisecond_timestamp(1656489600000) == datetime(2022, 6, 29, 10, 0, 0).astimezone(GERMANY_TIMEZONE)

@@ -278,7 +278,7 @@ class WeatherConditions:
     temperature: float
     precipitation: float
     wind_speed: float
-    timestamp: float
+    timestamp: datetime
     station: DWDWeatherStation
     humidity: int
     pressure: int

@@ -140,7 +140,7 @@ def test_weather_condition_to_point():
         temperature=23,
         pressure=10149,
         wind_speed=13,
-        timestamp=datetime.now().timestamp(),
+        timestamp=datetime.now(),
         humidity=22,
         station=DWDWeatherStation(
             location=Location(lat=53.38, lon=10.00),
@@ -154,6 +154,7 @@ def test_weather_condition_to_point():
         Point("weather")
         .field("temperature", given.temperature)
         .tag("precipitation", given.precipitation)
+        .tag("pressure", given.pressure)
         .tag("wind_speed", given.wind_speed)
         .tag("region", given.station.name)
         .tag("station_id", given.station.id)
