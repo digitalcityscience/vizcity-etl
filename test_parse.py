@@ -15,6 +15,7 @@ from parse import (
     extract_ev_charging_events,
     extract_parking_usage,
     extract_stadtrad_stations,
+    extract_traffic_counts,
     extract_traffic_status,
     extract_weather_sensors,
     parse_air_quality_measurments,
@@ -23,6 +24,14 @@ from parse import (
 )
 from utils import GERMANY_TIMEZONE
 
+def test_extract_extract_traffic_status(snapshot):
+    fixture_file = os.path.join(
+        os.path.dirname(__file__), "fixtures", "verkehrslage.xml"
+    )
+    with open(fixture_file) as xml_file:
+        result = extract_traffic_status(xml_file.read())
+        assert "2022-05-23T17:20:00" == result[0].timestamp
+        assert result == snapshot
 
 def test_extract_ev_charging_events(snapshot):
     fixture_file = os.path.join(
@@ -34,14 +43,12 @@ def test_extract_ev_charging_events(snapshot):
         assert "2022-05-17T17:26:35.610Z" == result[0].timestamp
         assert result == snapshot
 
-
 def test_extract_parking_usage(snapshot):
     fixture_file = os.path.join(
         os.path.dirname(__file__), "fixtures", "verkehr_parkhaeuser.xml"
     )
     with open(fixture_file) as xml_file:
         assert extract_parking_usage(xml_file.read()) == snapshot
-
 
 def test_extract_stadtrad_stations(snapshot):
     fixture_file = os.path.join(
@@ -61,6 +68,8 @@ def test_extract_weather_sensors(snapshot):
         assert result == snapshot
 
 
+
+
 def test_extract_air_quality(snapshot):
     fixture_file = os.path.join(
         os.path.dirname(__file__), "fixtures", "luftmessnetz_messwerte.xml"
@@ -73,13 +82,13 @@ def test_extract_air_quality(snapshot):
         assert result == snapshot
 
 
-def test_extract_traffic_status(snapshot):
+def test_extract_traffic_counts(snapshot):
     fixture_file = os.path.join(
         os.path.dirname(__file__), "fixtures", "traffic_status.json"
     )
     with open(fixture_file) as json_file:
         data = json.load(json_file)
-        assert extract_traffic_status(data) == snapshot
+        assert extract_traffic_counts(data) == snapshot
 
 
 def test_parse_airport_arrivals(snapshot):

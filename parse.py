@@ -13,9 +13,11 @@ from models import (
     BikeTrafficStatus,
     DWDWeatherStation,
     EvChargingStationEvent,
-    LocationEPSG,
+    LocationLineEPSG,
+    LocationPointEPSG,
     Parking,
     StadtradStation,
+    TrafficCounts,
     TrafficStatus,
     WeatherConditions,
     WeatherSensor,
@@ -58,7 +60,7 @@ def extract_parking_usage(xml_data: str) -> List[Parking]:
     )
 
     def remap_entry(xml_entry):
-        location_epsg25832 = remap_location(xml_entry, "de.hh.up:position")
+        location_epsg25832 = remap_location_pt(xml_entry, "de.hh.up:position")
         location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
         timestamp = (
             fallback_timestamp
@@ -88,7 +90,7 @@ def extract_stadtrad_stations(xml_data: str) -> List[StadtradStation]:
     ]
 
     def remap_entry(xml_entry) -> StadtradStation:
-        location_epsg25832 = remap_location(xml_entry, "de.hh.up:geom")
+        location_epsg25832 = remap_location_pt(xml_entry, "de.hh.up:geom")
         location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
 
         return StadtradStation(
@@ -117,7 +119,7 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
     timestamp = xml.get("wfs:FeatureCollection", {}).get("@timeStamp", datetime.now())
 
     def remap_entry(xml_entry) -> WeatherSensor:
-        location_epsg25832 = remap_location(xml_entry, "app:geom")
+        location_epsg25832 = remap_location_pt(xml_entry, "app:geom")
         location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
         return WeatherSensor(
             station=xml_entry["app:station"],
@@ -133,10 +135,44 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
     return list(map(remap_entry, entries))
 
 
-def remap_location(xml_entry: Dict, tag_name: str) -> LocationEPSG:
-    return LocationEPSG.from_single_line(
-        xml_entry.get(tag_name, {}).get("gml:Point", {}).get("gml:pos", "0 0")
-    )
+def extract_traffic_status(xml_data: str) -> List[TrafficStatus]:
+    xml = xmltodict.parse(xml_data, process_namespaces=False)
+    entries = [
+        entry["de.hh.up:verkehrslage"]
+        for entry in xml["wfs:FeatureCollection"]["gml:featureMember"]
+    ]
+
+    def remap_entry(xml_entry) -> TrafficStatus:
+        location_epsg25832 = remap_location_line(xml_entry, "de.hh.up:geom")
+        street_coords_utm = [[pt.x, pt.y] for pt in location_epsg25832.points]
+        center_coords = from_epsg25832_to_gps(location_epsg25832.center.x, location_epsg25832.center.y)
+        print(xml_entry["@gml:id"])
+        
+        return TrafficStatus(
+            id=xml_entry["@gml:id"],
+            timestamp=xml_entry["de.hh.up:zeitstempel"],
+            status=xml_entry["de.hh.up:zustandsklasse"],
+            street_class=xml_entry["de.hh.up:strassenklasse"],
+            street_center_lat=center_coords.get("lat", 0),
+            street_center_lon=center_coords.get("lon", 0),
+            street_coords_utm=street_coords_utm
+        )
+
+    return list(map(remap_entry, entries))
+
+
+def remap_location_pt(xml_entry: Dict, tag_name: str) -> LocationPointEPSG:
+
+        return LocationPointEPSG.from_single_line(
+            xml_entry.get(tag_name, {}).get("gml:Point", {}).get("gml:pos", "0 0")
+        )
+
+
+def remap_location_line(xml_entry: Dict, tag_name: str) -> LocationLineEPSG:
+        
+        return LocationLineEPSG.from_geom(
+            xml_entry.get(tag_name, {}).get("gml:LineString", {}).get("gml:posList", "0 0 0 0")
+        )
 
 
 def extract_air_quality(xml_data: str) -> List[AirQuality]:
@@ -147,7 +183,7 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
     ]
 
     def remap_entry(xml_entry) -> AirQuality:
-        location_epsg25832 = remap_location(xml_entry, "app:geom")
+        location_epsg25832 = remap_location_pt(xml_entry, "app:geom")
         location = from_epsg25832_to_gps(location_epsg25832.x, location_epsg25832.y)
 
         return AirQuality(
@@ -170,23 +206,23 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
     return list(map(remap_entry, entries))
 
 
-def extract_traffic_status(json_data: str) -> List[TrafficStatus]:
+def extract_traffic_counts(json_data: str) -> List[TrafficCounts]:
     results = jmespath.search(
         "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime, station_id:properties.assetID}",
         json_data,
     )
-    return list(map(lambda result: TrafficStatus(**result), results))  # type: ignore
+    return list(map(lambda result: TrafficCounts(**result), results))  # type: ignore
 
 
-def extract_e_charging_stations(json_data: str) -> List[TrafficStatus]:
+def extract_e_charging_stations(json_data: str) -> List[TrafficCounts]:
     results = jmespath.search(
         "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime}",
         json_data,
     )
-    return list(map(lambda result: TrafficStatus(**result), results))  # type: ignore
+    return list(map(lambda result: TrafficCounts(**result), results))  # type: ignore
 
 
-def extract_bike_traffic_status(json_data: str) -> List[TrafficStatus]:
+def extract_bike_traffic_status(json_data: str) -> List[TrafficCounts]:
     results = jmespath.search(
         "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime, station_id:name}",
         json_data,
