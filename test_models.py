@@ -8,8 +8,8 @@ from models import (
     DWDWeatherStation,
     Location,
     StadtradStation,
-    TrafficStatus,
-    LocationEPSG,
+    TrafficCounts,
+    LocationPointEPSG,
     WeatherConditions,
 )
 
@@ -23,7 +23,7 @@ def test_stadtrad_station_to_point():
         count_cargobike_electric=0,
         lat=564722.695,
         lon=5934167.221,
-        location_EPSG=LocationEPSG.from_single_line("564722.695 5934167.221"),
+        location_EPSG=LocationPointEPSG.from_single_line("564722.695 5934167.221"),
         timestamp=datetime.now(),
     )
     expected = (
@@ -44,7 +44,7 @@ def test_stadtrad_station_to_point():
 
 
 def test_traffic_status_to_point():
-    given = TrafficStatus(
+    given = TrafficCounts(
         lat=53.580056,
         lon=9.999282,
         counted_traffic=198,
@@ -67,7 +67,7 @@ def test_air_quality_to_point():
     given = AirQuality(
         lat=562609.0,
         lon=5933343.0,
-        location_EPSG=LocationEPSG.from_single_line("562609.0 5933343.0"),
+        location_EPSG=LocationPointEPSG.from_single_line("562609.0 5933343.0"),
         name="Altona-Elbhang",
         station_type="Hintergrundmessstation",
         station_id="80KT",

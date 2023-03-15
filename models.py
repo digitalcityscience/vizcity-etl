@@ -1,16 +1,21 @@
 from ctypes import Union
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Protocol, Optional
+from typing import Any, Protocol, Optional, List
 
 from dataclasses_json import dataclass_json
 from influxdb_client import Point
 
 from utils import parse_date_with_timezone_text
+import shapely.wkt
+from shapely.geometry import LineString as ShapelyLineString
+from geopy.geocoders import Nominatim
+
+geolocator = Nominatim(user_agent="example app")
 
 
 @dataclass
-class LocationEPSG:
+class LocationPointEPSG:
     x: float
     y: float
     system: int = 25832
@@ -18,11 +23,54 @@ class LocationEPSG:
     @classmethod
     def from_single_line(cls, line: str = "0 0"):
         x, y = line.split()
-        return LocationEPSG(float(x), float(y))
+        return LocationPointEPSG(float(x), float(y))
+
+
+@dataclass
+class LocationLineEPSG:
+    points: List[LocationPointEPSG]
+    center: Optional[LocationPointEPSG] = None
+
+    @classmethod
+    def from_geom(cls, coords_as_string: str = "0 0 0 0"):
+        # shapely does not read WKT strings with less then 3 points
+        # https://gis.stackexchange.com/a/447579
+        if len(coords_as_string.split()) < 5:
+            coords = [float(val) for val in coords_as_string.split()]
+            line: ShapelyLineString = ShapelyLineString(
+                [
+                    (coords[0], coords[1]),
+                    (coords[2], coords[3])
+                ]
+            )
+        else:
+            # convert provided string (float float float float float float ...)
+            # to (float float, float float, float float, ...)
+            # as valid WKT string
+            wkt_str = ""
+            for idx, val in enumerate(coords_as_string.split()):
+                wkt_str += val
+                if idx != 0 \
+                and not (idx % 2) == 0 \
+                and not idx == len(coords_as_string.split()) - 1:
+                    wkt_str += ", "
+
+                wkt_str += " "
+            
+            wkt_str = "LINESTRING(%s)" % wkt_str
+            line: ShapelyLineString = shapely.wkt.loads(wkt_str)
+
+        points = [LocationPointEPSG(pt[0], pt[1]) for pt in line.coords]
+
+        return LocationLineEPSG(
+            points=points,
+            center=LocationPointEPSG(line.centroid.x, line.centroid.y),
+        )
+        
 
 
 def add_location_EPSG_to_point(
-    location_EPSG: Optional[LocationEPSG], point: Point
+    location_EPSG: Optional[LocationPointEPSG], point: Point
 ) -> None:
     if location_EPSG:
         point.field("location_EPSG", location_EPSG.system)
@@ -45,7 +93,7 @@ class StadtradStation:
     lat: float
     lon: float
     timestamp: datetime
-    location_EPSG: Optional[LocationEPSG]
+    location_EPSG: Optional[LocationPointEPSG]
 
     def to_point(self) -> Point:
         point = (
@@ -74,7 +122,7 @@ class WeatherSensor:
     nachnullpunkt: int
     lat: float
     lon: float
-    location_EPSG: Optional[LocationEPSG]
+    location_EPSG: Optional[LocationPointEPSG]
 
     def to_point(self) -> Point:
         point = (
@@ -89,6 +137,40 @@ class WeatherSensor:
         )
 
         add_location_EPSG_to_point(self.location_EPSG, point)
+        return point
+    
+
+@dataclass
+class TrafficStatus:
+    id: int
+    timestamp: str
+    status: str
+    street_class: str    
+    street_center_lat: float
+    street_center_lon: float
+    street_coords_utm: List[List[float]]
+
+    @staticmethod
+    def get_street_name_and_district(lat:float, lon:float) -> str:
+        name = geolocator.reverse("{}, {}".format(lat, lon)).address.split(",")
+        return name[1], name[3]
+    
+    def to_point(self) -> Point:
+        street_name, district = self.get_street_name_and_district(lat=self.street_center_lat, lon=self.street_center_lon)
+
+        point = (
+            Point("traffic_status")
+            .tag("id", self.id)
+            .tag("street_status", self.status)
+            .tag("street_class", self.street_class)
+            .tag("street_name", street_name)
+            .tag("street_district", district)
+            .tag("street_center_lat", self.street_center_lat)
+            .tag("street_center_lon", self.street_center_lon)
+            .tag("street_coords_utm", self.street_coords_utm)
+            .time(self.timestamp)
+        )
+
         return point
 
 
@@ -109,7 +191,7 @@ class AirQuality(Location):
     so2: float
     pm10: float
     timestamp: datetime
-    location_EPSG: Optional[LocationEPSG]
+    location_EPSG: Optional[LocationPointEPSG]
 
     def to_point(self) -> Point:
         point = (
@@ -131,7 +213,7 @@ class AirQuality(Location):
 
 
 @dataclass
-class TrafficStatus(Location):
+class TrafficCounts(Location):
     timestamp: datetime
     counted_traffic: int
     measurement_name = "kfz_verkehr"
@@ -149,7 +231,7 @@ class TrafficStatus(Location):
 
 
 @dataclass
-class BikeTrafficStatus(TrafficStatus):
+class BikeTrafficStatus(TrafficCounts):
     measurement_name = "fahrrad_verkehr"
 
 
@@ -161,7 +243,7 @@ class Parking(Location):
     capacity: int
     price: str
     timestamp: Any
-    location_EPSG: Optional[LocationEPSG]
+    location_EPSG: Optional[LocationPointEPSG]
 
     def to_point(self) -> Point:
         point = (

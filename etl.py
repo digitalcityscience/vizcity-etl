@@ -13,6 +13,7 @@ from parse import (
     extract_ev_charging_events,
     extract_parking_usage,
     extract_stadtrad_stations,
+    extract_traffic_counts,
     extract_traffic_status,
     extract_weather_sensors,
     parse_air_quality_measurments,
@@ -39,6 +40,7 @@ def extract_transform_load_hamburg_geodienste(
         result_xml = get_remote_events(url, json=False)
         print(f"Parsing events ...")
         events = extract_function(result_xml)
+        print(events)
         load_events(bucket, events)
     except Exception as e:
         print(
@@ -68,7 +70,10 @@ def transform_events(
 
 
 def load_events(bucket: str, events: Collection[Pointable]):
+    print("loading events")
     events_points = [event.to_point() for event in events]
+    print(events_points[0])
+
     print(f"Writing {len(events_points)} events to the timeseries db in bucket {bucket} ...")
     write_points_to_influx(bucket, events_points)
 
@@ -125,10 +130,17 @@ def collect_e_charging_stations(bucket: str):
     )
 
 
-def collect_traffic_status(bucket: str):
+def collect_traffic_counts(bucket: str):
     extract_transform_load_hamburg_iot(
         bucket,
         "https://iot.hamburg.de/v1.1/Things?$filter=Datastreams/properties/serviceName eq 'HH_STA_AutomatisierteVerkehrsmengenerfassung'  and Datastreams/properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min' &$count=true&$expand=Datastreams($filter=properties/layerName eq 'Anzahl_Kfz_Zaehlstelle_15-Min';$expand=Observations($top=1;$orderby=phenomenonTime desc))",
+        extract_traffic_counts,
+    )
+
+def collect_traffic_status(bucket: str):
+    extract_transform_load_hamburg_geodienste(
+        bucket,
+        "https://geodienste.hamburg.de/HH_WFS_Verkehrslage?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typename=de.hh.up:verkehrslage",
         extract_traffic_status,
     )
 
