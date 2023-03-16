@@ -2,7 +2,10 @@ import re
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pyproj import Transformer
+from geopy.geocoders import Nominatim
+from retry import retry
 
+geolocator = Nominatim(user_agent="dcs_vizcity-etl")
 
 GERMANY_TIMEZONE = timezone(+timedelta(hours=2))
 
@@ -72,3 +75,34 @@ def from_millisecond_timestamp(ts:float) -> datetime:
     except ValueError:
         return from_millisecond_timestamp(ts / 1000)
     return result.astimezone(GERMANY_TIMEZONE)
+
+
+def has_numbers(inputString):
+        return any(char.isdigit() for char in inputString)
+
+
+def get_location_info(lat:float, lon:float) -> str:
+    if None in [lat, lon]:
+        return "unknown", "unknown", "unknown"
+    
+    @retry(tries=5)
+    def do_geocode(address, attempt=1, max_attempts=5):
+        return geolocator.reverse("{}, {}".format(lat, lon)).address.split(",")
+
+    
+    name = do_geocode(lat, lon)
+
+    if has_numbers(name[0]):
+        # usually street number is first item
+        return name[1], name[2], name[3]
+
+    # but the order of the address is not always the same
+    if not has_numbers(name[0]) and has_numbers(name[1]):
+        # first element is a place name, like a shop
+        return name[2], name[3], name[4]
+    
+    if not has_numbers(name[0]) and not has_numbers(name[1]):
+        # does not contain a street number at all
+        return name[0], name[1], name[2]
+    
+    

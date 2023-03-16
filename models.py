@@ -9,9 +9,6 @@ from influxdb_client import Point
 from utils import parse_date_with_timezone_text
 import shapely.wkt
 from shapely.geometry import LineString as ShapelyLineString
-from geopy.geocoders import Nominatim
-
-geolocator = Nominatim(user_agent="example app")
 
 
 @dataclass
@@ -145,29 +142,29 @@ class TrafficStatus:
     id: int
     timestamp: str
     status: str
+    status_index_class: int
     street_class: str    
     street_center_lat: float
     street_center_lon: float
     street_coords_utm: List[List[float]]
+    district: str
+    neighborhood: str
+    street_name: str
 
-    @staticmethod
-    def get_street_name_and_district(lat:float, lon:float) -> str:
-        name = geolocator.reverse("{}, {}".format(lat, lon)).address.split(",")
-        return name[1], name[3]
-    
     def to_point(self) -> Point:
-        street_name, district = self.get_street_name_and_district(lat=self.street_center_lat, lon=self.street_center_lon)
 
         point = (
             Point("traffic_status")
-            .tag("id", self.id)
-            .tag("street_status", self.status)
+            .field("traffic_flow_index_class", self.status_index_class)
             .tag("street_class", self.street_class)
-            .tag("street_name", street_name)
-            .tag("street_district", district)
+            .tag("street_district", self.district)
+            .tag("street_neighborhood", self.neighborhood)
+            .tag("street_name", self.street_name)
             .tag("street_center_lat", self.street_center_lat)
             .tag("street_center_lon", self.street_center_lon)
             .tag("street_coords_utm", self.street_coords_utm)
+            .tag("traffic_flow_category", self.status)
+            .tag("street_id", self.id)
             .time(self.timestamp)
         )
 

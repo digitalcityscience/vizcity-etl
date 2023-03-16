@@ -25,6 +25,7 @@ from models import (
 from utils import (
     from_epsg25832_to_gps,
     from_millisecond_timestamp,
+    get_location_info,
     parse_date_comma_time,
     parse_date_time,
     parse_date_time_without_seconds,
@@ -146,16 +147,33 @@ def extract_traffic_status(xml_data: str) -> List[TrafficStatus]:
         location_epsg25832 = remap_location_line(xml_entry, "de.hh.up:geom")
         street_coords_utm = [[pt.x, pt.y] for pt in location_epsg25832.points]
         center_coords = from_epsg25832_to_gps(location_epsg25832.center.x, location_epsg25832.center.y)
-        print(xml_entry["@gml:id"])
-        
+
+        street_name, neighborhood, district = get_location_info(
+            center_coords.get("lat", None), 
+            center_coords.get("lon", None)
+        )
+
+        # see index class description of layer
+        # https://metaver.de/trefferanzeige?cmd=doShowDocument&docuuid=22E00411-7932-47A6-B2DA-26F6E3E22B5E
+        index_classes = {
+            "fliessend": 1,
+            "dicht": 2,
+            "zäh": 3,
+            "gestaut": 4
+        }
+
         return TrafficStatus(
             id=xml_entry["@gml:id"],
             timestamp=xml_entry["de.hh.up:zeitstempel"],
             status=xml_entry["de.hh.up:zustandsklasse"],
+            status_index_class=index_classes.get(xml_entry["de.hh.up:zustandsklasse"], -1),
             street_class=xml_entry["de.hh.up:strassenklasse"],
             street_center_lat=center_coords.get("lat", 0),
             street_center_lon=center_coords.get("lon", 0),
-            street_coords_utm=street_coords_utm
+            street_coords_utm=street_coords_utm,
+            district = district,
+            neighborhood = neighborhood,
+            street_name = street_name
         )
 
     return list(map(remap_entry, entries))
