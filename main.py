@@ -39,5 +39,5 @@ def collect_master():
 
 if __name__ == "__main__":
     collect_master()
-    collect_group1()
-    collect_group2()
+    #collect_group1()
+    #collect_group2()
