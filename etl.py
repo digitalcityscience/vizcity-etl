@@ -40,7 +40,6 @@ def extract_transform_load_hamburg_geodienste(
         result_xml = get_remote_events(url, json=False)
         print(f"Parsing events ...")
         events = extract_function(result_xml)
-        print(events)
         load_events(bucket, events)
     except Exception as e:
         print(

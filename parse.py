@@ -6,6 +6,7 @@ import jmespath
 import xmltodict
 
 from models import (
+    AddressInfo,
     AirportArrival,
     AirQuality,
     AirQualityMeasurment,
@@ -22,13 +23,18 @@ from models import (
     WeatherConditions,
     WeatherSensor,
 )
+
+from geocode import get_address_info
+
 from utils import (
-    from_epsg25832_to_gps,
     from_millisecond_timestamp,
+    get_direction_of_line,
     parse_date_comma_time,
     parse_date_time,
     parse_date_time_without_seconds,
     parse_timestamp_like,
+    from_epsg25832_to_gps, 
+    is_in_hamburg
 )
 
 
@@ -137,25 +143,42 @@ def extract_weather_sensors(xml_data: str) -> List[WeatherSensor]:
 
 def extract_traffic_status(xml_data: str) -> List[TrafficStatus]:
     xml = xmltodict.parse(xml_data, process_namespaces=False)
+    
+    # get only entries in hamburg (dataset contains values from places far away)
     entries = [
         entry["de.hh.up:verkehrslage"]
         for entry in xml["wfs:FeatureCollection"]["gml:featureMember"]
+        if is_in_hamburg(remap_location_line(entry["de.hh.up:verkehrslage"], "de.hh.up:geom").shapely_linestring)
     ]
 
     def remap_entry(xml_entry) -> TrafficStatus:
         location_epsg25832 = remap_location_line(xml_entry, "de.hh.up:geom")
-        street_coords_utm = [[pt.x, pt.y] for pt in location_epsg25832.points]
-        center_coords = from_epsg25832_to_gps(location_epsg25832.center.x, location_epsg25832.center.y)
-        print(xml_entry["@gml:id"])
+        street_direction = get_direction_of_line(location_epsg25832.shapely_linestring)
+        center_coords_wgs = from_epsg25832_to_gps(
+            location_epsg25832.shapely_linestring.centroid.x,
+            location_epsg25832.shapely_linestring.centroid.y
+        )
+        
+        address_info: AddressInfo = get_address_info(location_epsg25832)
+
+        # see index class description of layer
+        # https://metaver.de/trefferanzeige?cmd=doShowDocument&docuuid=22E00411-7932-47A6-B2DA-26F6E3E22B5E
+        index_classes = {
+            "fliessend": 1,
+            "dicht": 2,
+            "zäh": 3,
+            "gestaut": 4
+        }
         
         return TrafficStatus(
-            id=xml_entry["@gml:id"],
             timestamp=xml_entry["de.hh.up:zeitstempel"],
             status=xml_entry["de.hh.up:zustandsklasse"],
+            status_index_class=index_classes.get(xml_entry["de.hh.up:zustandsklasse"], -1),
             street_class=xml_entry["de.hh.up:strassenklasse"],
-            street_center_lat=center_coords.get("lat", 0),
-            street_center_lon=center_coords.get("lon", 0),
-            street_coords_utm=street_coords_utm
+            street_center_lat=center_coords_wgs.get("lat", 0),
+            street_center_lon=center_coords_wgs.get("lon", 0),
+            street_direction=street_direction,
+            address_info=address_info
         )
 
     return list(map(remap_entry, entries))
@@ -170,7 +193,7 @@ def remap_location_pt(xml_entry: Dict, tag_name: str) -> LocationPointEPSG:
 
 def remap_location_line(xml_entry: Dict, tag_name: str) -> LocationLineEPSG:
         
-        return LocationLineEPSG.from_geom(
+        return LocationLineEPSG.from_gml_posList(
             xml_entry.get(tag_name, {}).get("gml:LineString", {}).get("gml:posList", "0 0 0 0")
         )
 
@@ -199,7 +222,7 @@ def extract_air_quality(xml_data: str) -> List[AirQuality]:
             lon=location.get("lon", 0),
             location_EPSG=location_epsg25832,
             timestamp=parse_date_time(
-                date=xml_entry.get("app:datum"), time=xml_entry.get("app:messzeit")
+            date=xml_entry.get("app:datum"), time=xml_entry.get("app:messzeit")
             ),
         )
 

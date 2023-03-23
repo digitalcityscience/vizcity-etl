@@ -9,9 +9,29 @@ from influxdb_client import Point
 from utils import parse_date_with_timezone_text
 import shapely.wkt
 from shapely.geometry import LineString as ShapelyLineString
-from geopy.geocoders import Nominatim
 
-geolocator = Nominatim(user_agent="example app")
+
+@dataclass_json
+@dataclass
+class AddressInfo:
+   street_number: str  # can be 29b
+   street: str
+   neighborhood: str
+   district: str
+   id: str
+
+   @classmethod
+   def from_dict(cls, dict):
+        return AddressInfo(
+            street_number=dict["street_number"],
+            street=dict["street"],
+            neighborhood=dict["neighborhood"],
+            district=dict["district"],
+            id=dict["id"],
+    )
+
+   def get_address(self):
+       return "%s %s" % (self.street, self.street_number)
 
 
 @dataclass
@@ -29,10 +49,10 @@ class LocationPointEPSG:
 @dataclass
 class LocationLineEPSG:
     points: List[LocationPointEPSG]
-    center: Optional[LocationPointEPSG] = None
+    shapely_linestring: ShapelyLineString
 
     @classmethod
-    def from_geom(cls, coords_as_string: str = "0 0 0 0"):
+    def from_gml_posList(cls, coords_as_string: str = "0 0 0 0"):
         # shapely does not read WKT strings with less then 3 points
         # https://gis.stackexchange.com/a/447579
         if len(coords_as_string.split()) < 5:
@@ -64,10 +84,9 @@ class LocationLineEPSG:
 
         return LocationLineEPSG(
             points=points,
-            center=LocationPointEPSG(line.centroid.x, line.centroid.y),
+            shapely_linestring=line
         )
-        
-
+    
 
 def add_location_EPSG_to_point(
     location_EPSG: Optional[LocationPointEPSG], point: Point
@@ -142,32 +161,29 @@ class WeatherSensor:
 
 @dataclass
 class TrafficStatus:
-    id: int
     timestamp: str
     status: str
+    status_index_class: int
     street_class: str    
     street_center_lat: float
     street_center_lon: float
-    street_coords_utm: List[List[float]]
+    street_direction: str
+    address_info: AddressInfo
 
-    @staticmethod
-    def get_street_name_and_district(lat:float, lon:float) -> str:
-        name = geolocator.reverse("{}, {}".format(lat, lon)).address.split(",")
-        return name[1], name[3]
-    
     def to_point(self) -> Point:
-        street_name, district = self.get_street_name_and_district(lat=self.street_center_lat, lon=self.street_center_lon)
 
         point = (
             Point("traffic_status")
-            .tag("id", self.id)
-            .tag("street_status", self.status)
+            .field("traffic_flow_index_class", self.status_index_class)
+            .field("street_center_lat", self.street_center_lat)
+            .field("street_center_lon", self.street_center_lon)
+            .tag("street_segment_id", self.address_info.id)
             .tag("street_class", self.street_class)
-            .tag("street_name", street_name)
-            .tag("street_district", district)
-            .tag("street_center_lat", self.street_center_lat)
-            .tag("street_center_lon", self.street_center_lon)
-            .tag("street_coords_utm", self.street_coords_utm)
+            .tag("street_district", self.address_info.district)
+            .tag("street_neighborhood", self.address_info.neighborhood)
+            .tag("address", self.address_info.get_address())
+            .tag("street_direction", self.street_direction)
+            .tag("traffic_flow_category", self.status)
             .time(self.timestamp)
         )
 

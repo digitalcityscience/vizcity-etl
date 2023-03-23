@@ -7,3 +7,4 @@ dataclasses-json
 pyproj==3.3.1
 shapely
 geopy
+retry
