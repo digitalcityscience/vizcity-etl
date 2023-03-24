@@ -20,6 +20,7 @@ BUCKET = "vizcity-master"
 def collect():
     collect_traffic_status(BUCKET)
     collect_parking_usage(BUCKET)
+    collect_traffic_status(BUCKET)
     collect_swis(BUCKET)
     collect_bike_traffic_status(BUCKET)
     collect_parking_usage(BUCKET)

@@ -71,8 +71,6 @@ def transform_events(
 def load_events(bucket: str, events: Collection[Pointable]):
     print("loading events")
     events_points = [event.to_point() for event in events]
-    print(events_points[0])
-
     print(f"Writing {len(events_points)} events to the timeseries db in bucket {bucket} ...")
     write_points_to_influx(bucket, events_points)
 
