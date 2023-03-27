@@ -18,10 +18,10 @@ def extract_bike_traffic_status() -> List[TrafficCounts]:
         "value[*].{counted_traffic:Datastreams[0].Observations[0].result, lon: Datastreams[0].observedArea.coordinates[0], lat: Datastreams[0].observedArea.coordinates[1], timestamp:Datastreams[0].Observations[0].resultTime, station_id:name}",
         json_data,
     )
-
-    results = list(map(lambda result: BikeTrafficStatus(**result), results))  # type: ignore
     for result in results:
         result["counted_traffic"] = float(result["counted_traffic"])
+    
+    results = list(map(lambda result: BikeTrafficStatus(**result), results))  # type: ignore
     results = list(filter(lambda result: BEGINNING <= datetime.datetime.fromisoformat(result.timestamp[:-1]) <= END, results))
 
     return results
