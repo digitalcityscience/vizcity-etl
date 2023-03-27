@@ -164,19 +164,20 @@ def get_stadtrad_data():
 
 if __name__ == "__main__":
 
-    # bike counts
-    bikes_events = extract_bike_traffic_status()
-    for bucket in ["vizcity-master", "atlantis"]:
-        load_events(bucket, bikes_events)
-        print("bike", bucket)
+    # # bike counts
+    # bikes_events = extract_bike_traffic_status()
+    # for bucket in ["vizcity-master", "atlantis"]:
+    #     load_events(bucket, bikes_events)
+    #     print("bike", bucket)
 
-    # traffic counts
-    cars_events = extract_bike_traffic_status()
-    for bucket in ["vizcity-master", "atlantis", "Duckville", "Oribos"]:
-        load_events(bucket, cars_events)
-        print("traffic count", bucket)
+    # # traffic counts
+    # cars_events = extract_bike_traffic_status()
+    # for bucket in ["vizcity-master", "atlantis", "Duckville", "Oribos"]:
+    #     load_events(bucket, cars_events)
+    #     print("traffic count", bucket)
     # weather
-    for bucket in ["vizcity-master", "atlantis", "modor"]:
+
+    for bucket in ["mordor"]:
         events = extract_weather()
         for event in events:
             print(event.to_point().to_line_protocol())
