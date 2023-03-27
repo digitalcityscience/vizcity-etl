@@ -6,7 +6,9 @@ from typing import Any, Dict, List, Optional
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS, Point
 
-
+from dotenv import load_dotenv
+load_dotenv()
+ 
 BUCKET_GROUP_LUT = {
     "atlantis": "GROUP1",
     "mordor": "GROUP1",

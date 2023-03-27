@@ -58,7 +58,7 @@ def extract_weather():
         weather_data.append(
             WeatherConditions(
                 precipitation=float(line[4]),
-                temperature=line[1],
+                temperature=int(line[1]),
                 pressure=line[9],
                 wind_speed=line[7],
                 timestamp=datetime.datetime.fromisoformat(line[0]),
@@ -163,7 +163,6 @@ def get_stadtrad_data():
 
 if __name__ == "__main__":
 
-    """
     # bike counts
     bikes_events = extract_bike_traffic_status()
     for bucket in ["vizcity-master", "atlantis"]:
@@ -182,7 +181,6 @@ if __name__ == "__main__":
             print(event.to_point().to_line_protocol())
             load_events(bucket, [event])
         print("weather", bucket) 
-    """
 
     # stadtrad 
     for bucket in ["vizcity-master", "atlantis", "BikiniBottom", "cintra", "gotham"]:
