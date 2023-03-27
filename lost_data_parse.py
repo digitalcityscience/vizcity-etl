@@ -58,7 +58,7 @@ def extract_weather():
         weather_data.append(
             WeatherConditions(
                 precipitation=float(line[4]),
-                temperature=int(line[1]),
+                temperature=int(line[1])    ,
                 pressure=line[9],
                 wind_speed=line[7],
                 timestamp=datetime.datetime.fromisoformat(line[0]),
