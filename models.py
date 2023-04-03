@@ -14,11 +14,13 @@ from shapely.geometry import LineString as ShapelyLineString
 @dataclass_json
 @dataclass
 class AddressInfo:
-   street_number: str  # can be 29b
    street: str
    neighborhood: str
    district: str
    id: str
+   lane_count: Optional[int]
+   max_velocity: Optional[int]
+
 
    @classmethod
    def from_dict(cls, dict):
@@ -28,6 +30,8 @@ class AddressInfo:
             neighborhood=dict["neighborhood"],
             district=dict["district"],
             id=dict["id"],
+            max_velocity=dict["jax_velocity"],
+            lane_count=dict["lane_count"]
     )
 
    def get_address(self):
@@ -183,6 +187,8 @@ class TrafficStatus:
             .tag("street_neighborhood", self.address_info.neighborhood)
             .tag("address", self.address_info.get_address())
             .tag("street_direction", self.street_direction)
+            .tag("lane_count", self.address_info.lane_count)
+            .tag("max_velocity", self.address_info.max_velocity)
             .tag("traffic_flow_category", self.status)
             .time(self.timestamp)
         )
