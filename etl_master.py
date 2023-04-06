@@ -18,18 +18,17 @@ BUCKET = "vizcity-master"
 
 
 def collect():
+    collect_bike_traffic_status(BUCKET)
+    collect_traffic_counts(BUCKET)
     collect_traffic_status(BUCKET)
     collect_parking_usage(BUCKET)
-    collect_traffic_status(BUCKET)
     collect_swis(BUCKET)
-    collect_bike_traffic_status(BUCKET)
     collect_parking_usage(BUCKET)
     collect_stadtrad(BUCKET)
     collect_e_charging_stations(BUCKET)
     collect_airport_arrivals(BUCKET)
     collect_detailed_air_quality_hamburg_list(BUCKET)
     collect_air_quality(BUCKET)
-    collect_traffic_counts(BUCKET)
     dwd_hamburg = DWDWeatherStation(
         location=Location(lat=53.38, lon=10.00),
         id="10147",

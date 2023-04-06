@@ -9,16 +9,20 @@ from influxdb_client import Point
 from utils import parse_date_with_timezone_text
 import shapely.wkt
 from shapely.geometry import LineString as ShapelyLineString
+import pytz
 
 
 @dataclass_json
 @dataclass
 class AddressInfo:
-   street_number: str  # can be 29b
+   street_number: str
    street: str
    neighborhood: str
    district: str
-   id: str
+   geom_id: str
+   lane_count: Optional[int] = None
+   max_velocity: Optional[int] = None
+
 
    @classmethod
    def from_dict(cls, dict):
@@ -27,7 +31,9 @@ class AddressInfo:
             street=dict["street"],
             neighborhood=dict["neighborhood"],
             district=dict["district"],
-            id=dict["id"],
+            geom_id=dict["geom_id"],
+            max_velocity=dict["jax_velocity"],
+            lane_count=dict["lane_count"]
     )
 
    def get_address(self):
@@ -174,17 +180,20 @@ class TrafficStatus:
 
         point = (
             Point("traffic_status")
-            .field("traffic_flow_index_class", self.status_index_class)
-            .field("street_center_lat", self.street_center_lat)
-            .field("street_center_lon", self.street_center_lon)
-            .tag("street_segment_id", self.address_info.id)
+            .tag("street_segment_id", self.address_info.geom_id)
             .tag("street_class", self.street_class)
             .tag("street_district", self.address_info.district)
             .tag("street_neighborhood", self.address_info.neighborhood)
             .tag("address", self.address_info.get_address())
             .tag("street_direction", self.street_direction)
+            .tag("lane_count", self.address_info.lane_count)
+            .tag("max_velocity", self.address_info.max_velocity)
             .tag("traffic_flow_category", self.status)
-            .time(self.timestamp)
+            .field("traffic_flow_index_class", self.status_index_class)
+            .field("lat", self.street_center_lat)
+            .field("lon", self.street_center_lon)
+            # read datetime from string , set timezon to berlin
+            .time(datetime.strptime(self.timestamp, "%Y-%m-%dT%H:%M:%S").astimezone(pytz.timezone("Europe/Berlin")))
         )
 
         return point
