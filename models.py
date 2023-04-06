@@ -9,6 +9,7 @@ from influxdb_client import Point
 from utils import parse_date_with_timezone_text
 import shapely.wkt
 from shapely.geometry import LineString as ShapelyLineString
+import pytz
 
 
 @dataclass_json
@@ -179,9 +180,6 @@ class TrafficStatus:
 
         point = (
             Point("traffic_status")
-            .field("traffic_flow_index_class", self.status_index_class)
-            .field("street_center_lat", self.street_center_lat)
-            .field("street_center_lon", self.street_center_lon)
             .tag("street_segment_id", self.address_info.geom_id)
             .tag("street_class", self.street_class)
             .tag("street_district", self.address_info.district)
@@ -191,7 +189,11 @@ class TrafficStatus:
             .tag("lane_count", self.address_info.lane_count)
             .tag("max_velocity", self.address_info.max_velocity)
             .tag("traffic_flow_category", self.status)
-            .time(self.timestamp)
+            .field("traffic_flow_index_class", self.status_index_class)
+            .field("street_center_lat", self.street_center_lat)
+            .field("street_center_lon", self.street_center_lon)
+            # read datetime from string , set timezon to berlin
+            .time(datetime.strptime(self.timestamp, "%Y-%m-%dT%H:%M:%S").astimezone(pytz.timezone("Europe/Berlin")))
         )
 
         return point
