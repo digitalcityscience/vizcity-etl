@@ -190,8 +190,8 @@ class TrafficStatus:
             .tag("max_velocity", self.address_info.max_velocity)
             .tag("traffic_flow_category", self.status)
             .field("traffic_flow_index_class", self.status_index_class)
-            .field("street_center_lat", self.street_center_lat)
-            .field("street_center_lon", self.street_center_lon)
+            .field("lat", self.street_center_lat)
+            .field("lon", self.street_center_lon)
             # read datetime from string , set timezon to berlin
             .time(datetime.strptime(self.timestamp, "%Y-%m-%dT%H:%M:%S").astimezone(pytz.timezone("Europe/Berlin")))
         )
