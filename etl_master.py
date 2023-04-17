@@ -21,7 +21,6 @@ def collect():
     collect_bike_traffic_status(BUCKET)
     collect_traffic_counts(BUCKET)
     collect_traffic_status(BUCKET)
-    collect_parking_usage(BUCKET)
     collect_swis(BUCKET)
     collect_parking_usage(BUCKET)
     collect_stadtrad(BUCKET)

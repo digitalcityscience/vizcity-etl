@@ -12,9 +12,9 @@ def collect_group1():
 
     print("Collecting events for GROUP1")
     collect_atlantis()
-    collect_cintra()
-    collect_gotham()
-    collect_mordor()
+    #collect_cintra()
+    #collect_gotham()
+    #collect_mordor()
 
 
 def collect_group2():
@@ -25,8 +25,8 @@ def collect_group2():
 
     print("Collecting events for GROUP2")
     collect_duckville()
-    collect_bikini_bottom()
-    collect_lazytown()
+    #collect_bikini_bottom()
+    #collect_lazytown()
     collect_oribos()
 
 
