@@ -88,6 +88,11 @@ def extract_transform_load_hamburg_iot(
 
 
 def collect_stadtrad(bucket: str):
+
+    if datetime.datetime.now().hour >= 1 and datetime.datetime.now().hour < 4:
+        print("Skipping stadtrad collection, as we were asked to limit calls in this time")
+        return
+
     extract_transform_load_hamburg_geodienste(
         bucket,
         "https://geodienste.hamburg.de/HH_WFS_Stadtrad?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typename=de.hh.up:stadtrad_stationen",
