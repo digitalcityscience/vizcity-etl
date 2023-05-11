@@ -23,7 +23,6 @@ def collect():
     collect_traffic_status(BUCKET)
     collect_swis(BUCKET)
     collect_parking_usage(BUCKET)
-    collect_stadtrad(BUCKET)
     collect_e_charging_stations(BUCKET)
     collect_airport_arrivals(BUCKET)
     collect_detailed_air_quality_hamburg_list(BUCKET)
@@ -35,5 +34,6 @@ def collect():
         elevation=16,
     )
     collect_weather_dwd(dwd_hamburg, BUCKET)
+    collect_stadtrad(BUCKET)
 
 collect()
